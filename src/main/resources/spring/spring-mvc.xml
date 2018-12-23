@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                        http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+                        http://www.springframework.org/schema/context
+                        http://www.springframework.org/schema/context/spring-context-4.1.xsd
+                        http://www.springframework.org/schema/mvc
+                        http://www.springframework.org/schema/mvc/spring-mvc-4.1.xsd
+                        http://www.springframework.org/schema/aop
+                        http://www.springframework.org/schema/aop/spring-aop-4.1.xsd">
+  <!-- 1.启动注解，注册服务，如验证框架、全局类型转换器 -->
+  <mvc:annotation-driven />
+
+  <mvc:resources mapping="/static/**/" location="/static/"/>  
+
+  <!-- 2.启动自动扫描,只加载controller的时候,不加载service,因为此时事物并未生效,若此时加载了service,那么事物无法对service进行拦截 -->
+  <context:component-scan base-package="org.cloud.activitiDemo.controller" />
+
+  <!-- 3.配置视图解析器 -->
+  <!-- 对转向视图的路径解析，在请求时对视图名称添加前后缀 -->
+  <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+    <property name="prefix" value="/WEB-INF/views/" />
+    <property name="suffix" value=".jsp" />
+    <property name="contentType" value="text/html;charset=UTF-8" />
+  </bean>
+
+</beans>
