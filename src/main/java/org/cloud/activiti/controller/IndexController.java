@@ -1,4 +1,4 @@
-package org.cloud.activitiDemo.controller;
+package org.cloud.activiti.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

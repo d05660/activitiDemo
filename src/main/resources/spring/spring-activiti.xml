@@ -24,7 +24,6 @@
     <property name="deploymentResources">
       <list>
         <value>classpath*:/deployments/*.bpmn</value>
-        <value>classpath*:/deployments/*.png</value>
       </list>
     </property>
   </bean>

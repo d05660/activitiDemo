@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+    PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+  <!--<settings> -->
+  <!--&lt;!&ndash; 打印???句 &ndash;&gt; -->
+  <!--<setting name="logImpl" value="STDOUT_LOGGING" /> -->
+  <!--</settings> -->
+
+  <typeAliases>
+    <typeAlias type="org.cloud.activiti.entity.User" alias="User" />
+    <typeAlias type="org.cloud.activiti.entity.UserRole" alias="UserRole" />
+    <typeAlias type="org.cloud.activiti.entity.Role" alias="Role" />
+    <typeAlias type="org.cloud.activiti.entity.RolePermission" alias="RolePermission" />
+    <typeAlias type="org.cloud.activiti.entity.Permission" alias="Permission" />
+    <typeAlias type="org.cloud.activiti.entity.LeaveApply" alias="LeaveApply" />
+  </typeAliases>
+
+  <plugins>
+    <plugin interceptor="com.github.pagehelper.PageInterceptor">
+      <property name="offsetAsPageNum" value="true" />
+      <property name="rowBoundsWithCount" value="true" />
+      <property name="reasonable" value="true" />
+    </plugin>
+  </plugins>
+</configuration>

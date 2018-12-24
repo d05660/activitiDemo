@@ -17,7 +17,7 @@
   <context:annotation-config />
 
   <!-- 开启自动扫包 -->
-  <context:component-scan base-package="org.cloud.activitiDemo">
+  <context:component-scan base-package="org.cloud.activiti">
     <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller" />
   </context:component-scan>
 

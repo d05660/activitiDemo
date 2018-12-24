@@ -18,7 +18,7 @@
   <mvc:resources mapping="/static/**/" location="/static/"/>  
 
   <!-- 2.启动自动扫描,只加载controller的时候,不加载service,因为此时事物并未生效,若此时加载了service,那么事物无法对service进行拦截 -->
-  <context:component-scan base-package="org.cloud.activitiDemo.controller" />
+  <context:component-scan base-package="org.cloud.activiti.controller" />
 
   <!-- 3.配置视图解析器 -->
   <!-- 对转向视图的路径解析，在请求时对视图名称添加前后缀 -->
