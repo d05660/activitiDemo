@@ -7,8 +7,18 @@ public class Role {
 	private String roleName;
 	private List<UserRole> userRoles;
 	private List<RolePermission> rolePermissions;
+	
+	public Role() {
+	    
+	}
 
-	public int getRid() {
+	public Role(int rid, String roleName) {
+        super();
+        this.rid = rid;
+        this.roleName = roleName;
+    }
+
+    public int getRid() {
 		return rid;
 	}
 

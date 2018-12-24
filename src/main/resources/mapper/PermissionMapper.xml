@@ -4,19 +4,30 @@
 
 <mapper namespace="org.cloud.activiti.mapper.PermissionMapper">
 
-    <select id="getPermissions" resultType="Permission">
-        select * from permission
-    </select>
-    <select id="getPermissionByname" resultType="Permission">
-        select * from permission where permissionname=#{permissionname}
-    </select>
-    <insert id="addPermission">
-        insert into permission (permissionname) values(#{permissisonname})
-    </insert>
-    <delete id="deletePermission">
-        delete from permission where pid=#{pid}
-    </delete>
-    <delete id="deleteRolePermission">
-        delete from role_permission where permissionid=#{permissionid}
-    </delete>
+  <select id="getPermissions" resultType="Permission">
+    SELECT *
+    FROM t_permission
+  </select>
+
+  <select id="getPermissionByName" resultType="Permission">
+    SELECT *
+    FROM
+      t_permission
+    WHERE
+      permissionname=#{permissionName}
+  </select>
+  <insert id="addPermission">
+    INSERT INTO
+      t_permission (permissionname)
+    VALUES
+      (#{permissisonName})
+  </insert>
+  <delete id="deletePermission">
+    DELETE FROM t_permission
+    WHERE pid=#{pid}
+  </delete>
+  <delete id="deleteRolePermission">
+    DELETE FROM t_role_permission
+    WHERE permissionid=#{permissionId}
+  </delete>
 </mapper>

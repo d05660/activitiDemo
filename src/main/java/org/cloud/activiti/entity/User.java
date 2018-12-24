@@ -9,8 +9,29 @@ public class User {
 	private String tel;
 	private int age;
 	private List<UserRole> userRoles;
+	
+	public User() {
+	    
+	}
+	
+	public User(String username, String password, String tel, int age) {
+        super();
+        this.username = username;
+        this.password = password;
+        this.tel = tel;
+        this.age = age;
+    }
+	
+	public User(int uid, String username, String password, String tel, int age) {
+        super();
+        this.uid = uid;
+        this.username = username;
+        this.password = password;
+        this.tel = tel;
+        this.age = age;
+    }
 
-	public int getUid() {
+    public int getUid() {
 		return uid;
 	}
 

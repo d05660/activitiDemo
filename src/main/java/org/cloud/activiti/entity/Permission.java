@@ -4,7 +4,7 @@ import java.util.List;
 
 public class Permission {
 	private int pid;
-	private String permissionname;
+	private String permissionName;
 	private List<RolePermission> rp;
 
 	public int getPid() {
@@ -15,12 +15,12 @@ public class Permission {
 		this.pid = pid;
 	}
 
-	public String getPermissionname() {
-		return permissionname;
+	public String getPermissionName() {
+		return permissionName;
 	}
 
-	public void setPermissionname(String permissionname) {
-		this.permissionname = permissionname;
+	public void setPermissionName(String permissionName) {
+		this.permissionName = permissionName;
 	}
 
 	public List<RolePermission> getRp() {

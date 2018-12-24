@@ -10,47 +10,74 @@
     <result column="password" property="password" />
     <result column="tel" property="tel" />
     <result column="age" property="age" />
-    <collection property="user_roles" column="userid" ofType="UserRole">
+    <collection property="userRoles" column="userid" ofType="UserRole">
       <id property="urid" column="urid" />
       <association column="roleid" property="role" javaType="Role">
         <id column="rid" property="rid"></id>
-        <result column="rolename" property="rolename" />
+        <result column="rolename" property="roleName" />
       </association>
     </collection>
   </resultMap>
   
   <select id="getUsers" resultMap="userMap">
-    SELECT * 
-    FROM user 
-    LEFT JOIN user_role ON user.uid=user_role.userid
-    LEFT JOIN role ON user_role.roleid=role.rid
+    SELECT *
+    FROM 
+      t_user
+    LEFT JOIN 
+      t_user_role ON t_user.uid=t_user_role.userid
+    LEFT JOIN 
+      t_role ON t_user_role.roleid=t_role.rid
   </select>
 
-  <select id="getUserByid" resultMap="userMap">
-    select * from user left join user_role on user.uid=user_role.userid left
-    join
-    role on user_role.roleid=role.rid where user.uid=#{uid}
+  <select id="getUserById" resultMap="userMap">
+    SELECT
+      * 
+    FROM
+      t_user 
+    LEFT JOIN
+      t_user_role ON t_user.uid=t_user_role.userid 
+    LEFT JOIN
+      t_role ON t_user_role.roleid=t_role.rid
+    WHERE 
+      t_user.uid=#{uid}
   </select>
 
-  <delete id="deleteuser" parameterType="int">
-    delete from user where user.uid=#{uid}
+  <delete id="deleteUser" parameterType="int">
+    DELETE FROM 
+      t_user
+    WHERE
+      t_user.uid=#{uid}
   </delete>
 
-  <delete id="deleteuserrole" parameterType="int">
-    delete from user_role where user_role.userid=#{uid}
+  <delete id="deleteUserRole" parameterType="int">
+    DELETE FROM 
+      t_user_role 
+    WHERE 
+      t_user_role.userid=#{uid}
   </delete>
 
-  <insert id="adduser" useGeneratedKeys="true" keyProperty="uid" parameterType="User">
-    insert into user (username,password,tel,age)
-    values (#{username},'1234',#{tel},#{age})
+  <insert id="addUser" useGeneratedKeys="true" keyProperty="uid" parameterType="User">
+    INSERT INTO 
+      t_user (username,password,tel,age)
+    VALUES
+     (#{username},'1234',#{tel},#{age})
   </insert>
 
-  <update id="updateuser" parameterType="User">
-    update user set
-    tel=#{tel},age=#{age}
-    where user.uid=#{uid}
+  <update id="updateUser" parameterType="User">
+    UPDATE
+      t_user
+    SET
+      tel=#{tel},age=#{age}
+    WHERE 
+      t_user.uid=#{uid}
   </update>
-  <select id="getUidByusername" resultType="int" parameterType="String">
-    select uid from user where username=#{username}
+
+  <select id="getUidByUserName" resultType="int" parameterType="String">
+    SELECT 
+      uid
+    FROM
+      t_user 
+    WHERE
+      username=#{username}
   </select>
 </mapper>
