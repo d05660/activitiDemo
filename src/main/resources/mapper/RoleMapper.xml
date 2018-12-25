@@ -38,7 +38,7 @@
       (#{user.uid},#{role.rid})
   </insert>
   
-  <select id="getRoleIdByName" resultType="Role" parameterType="String">
+  <select id="getRoleByName" resultType="Role" parameterType="String">
     SELECT * 
     FROM t_role 
     WHERE rolename=#{roleName}

@@ -20,7 +20,7 @@ public interface RoleMapper {
 
     void deleteUserRole(int rid);
 
-    Role getRoleIdByName(String roleName);
+    Role getRoleByName(String roleName);
 
     void addUserRole(UserRole userRole);
 

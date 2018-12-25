@@ -15,6 +15,8 @@ public interface VacationService {
     public List<VacationRequest> getDeptTaskByPage(int firstRow, int rowCount);
 
     public List<Task> getDeptTasks(String userId);
+    
+    public long getDeptTaskCount(String userId);
 
     public List<String> getHighLightedFlows(ProcessDefinitionEntity processDefinition,
             List<HistoricActivityInstance> historicActivityInstances);
@@ -22,16 +24,22 @@ public interface VacationService {
     public List<VacationRequest> getHrTaskByPage(int firstRow, int rowCount);
 
     public List<Task> getHrTasks(String userId);
+    
+    public long getHrTaskCount(String userId);
 
     public VacationRequest getLeaveApply(int id);
 
     public List<VacationRequest> getUpdateApplyTaskByPage(int firstRow, int rowCount);
 
     public List<Task> getUpdateApplyTasks(String userId);
+    
+    public long getUpdateApplyTaskCount(String userId);
 
     public List<VacationRequest> getXJTaskByPage(int firstRow, int rowCount);
 
     public List<Task> getXJTasks(String userId);
+    
+    public long getXJTaskCount(String userId);
 
     public ProcessInstance startWorkflow(VacationRequest apply, String userId,
             Map<String, Object> variables);

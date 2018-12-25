@@ -1,8 +1,11 @@
 package org.cloud.activiti.service.impl;
 
+import static org.junit.Assert.*;
+
 import org.cloud.activiti.entity.Role;
 import org.cloud.activiti.entity.User;
-import org.cloud.activiti.service.SystemService;
+import org.cloud.activiti.service.RoleService;
+import org.cloud.activiti.service.UserService;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,12 +20,15 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 public class SystemServiceImplTest {
 
     @Autowired
-    private SystemService systemService;
+    private UserService userService;
+    
+    @Autowired
+    private RoleService roleService;
 
     @Test
     public void testAddPermission() {
-        systemService.addPermission("permission1");
-        systemService.addPermission("permission2");
+        roleService.addPermission("permission1");
+        roleService.addPermission("permission2");
     }
 
     @Test
@@ -30,13 +36,13 @@ public class SystemServiceImplTest {
         String[] permissionNames = new String[] {
                 "permission1", "permission2"
         };
-        systemService.addRole(new Role(10, "role01"), permissionNames);
-        systemService.addRole(new Role(11, "role02"), permissionNames);
+        roleService.addRole(new Role(10, "role01"), permissionNames);
+        roleService.addRole(new Role(11, "role02"), permissionNames);
     }
 
     @Test
     public void testAddUserUser() {
-        systemService.addUser(new User(10, "user01", "1234", "135", 40));
+        userService.addUser(new User(10, "user01", "1234", "135", 40));
     }
 
     @Test
@@ -44,77 +50,77 @@ public class SystemServiceImplTest {
         String[] roleNames = new String[] {
                 "role01", "role02"
         };
-        systemService.addUser(new User(11, "user02", "1234", "134", 41), roleNames);
+        userService.addUser(new User(11, "user02", "1234", "134", 41), roleNames);
     }
 
     @Test
     public void testDeletePermission() {
-        systemService.deletePermission(7);
+        roleService.deletePermission(7);
     }
 
     @Test
     public void testDeleteRole() {
-        systemService.deleteRole(10);
+        roleService.deleteRole(10);
     }
 
     @Test
     public void testDeleteRolePermission() {
-        systemService.deleteRolePermission(9);
+        roleService.deleteRolePermission(9);
     }
 
     @Test
     public void testDeleteUser() {
-        systemService.deleteUser(8);
+        userService.deleteUser(8);
     }
 
     @Test
     public void testGetAllUsers() {
-        System.out.println(systemService.getAllUsers());
+        assertNotNull(userService.getAllUsers());
     }
 
     @Test
     public void testGetPagedPermissions() {
-        systemService.getPagedPermissions(0, 5);
+        roleService.getPagedPermissions(0, 5);
     }
 
     @Test
     public void testGetPagedRoleInfo() {
-        systemService.getPagedRoleInfo(0, 5);
+        roleService.getPagedRoleInfo(0, 5);
     }
 
     @Test
     public void testGetPagedUsers() {
-        systemService.getPagedUsers(0, 5);
+        userService.getPagedUsers(0, 5);
     }
 
     @Test
     public void testGetPermissions() {
-        systemService.getPermissions();
+        roleService.getPermissions();
     }
 
     @Test
     public void testGetRoleById() {
-        systemService.getRoleById(3);
+        roleService.getRoleById(3);
     }
 
     @Test
     public void testGetRoleInfo() {
-        systemService.getRoleInfo();
+        roleService.getRoleInfo();
     }
 
     @Test
     public void testGetRoles() {
-        systemService.getRoles();
+        roleService.getRoles();
     }
 
     @Test
     public void testGetUidByUserName() {
-        systemService.getUidByUserName("lisi");
+        userService.getUidByUserName("lisi");
     }
 
     @Test
     public void testGetUserById() {
-        systemService.getUserById(1);
+        userService.getUserById(1);
     }
 
     @Test
@@ -122,7 +128,7 @@ public class SystemServiceImplTest {
         String[] permissionNames = new String[] {
                 "permission1", "permission2"
         };
-        systemService.updateRole(9, permissionNames);
+        roleService.updateRole(9, permissionNames);
     }
 
     @Test
@@ -130,7 +136,7 @@ public class SystemServiceImplTest {
         String[] roleNames = new String[] {
                 "role01"
         };
-        systemService.updateUser(5, new User("user02", "1234", "134", 44), roleNames);
+        userService.updateUser(5, new User("user02", "1234", "134", 44), roleNames);
     }
 
 }

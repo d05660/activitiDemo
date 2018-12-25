@@ -11,7 +11,8 @@
   <!-- 引用spring子模块 -->
   <import resource="spring-mybatis.xml" />
   <import resource="spring-activiti.xml" />
-  <!-- <import resource="spring-job.xml" /> -->
+  <import resource="spring-shiro.xml"/>
+  <import resource="spring-ehcache.xml" />
 
   <!-- 注解支持 -->
   <context:annotation-config />

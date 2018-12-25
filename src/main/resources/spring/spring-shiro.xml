@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+  xmlns:util="http://www.springframework.org/schema/util" xmlns:aop="http://www.springframework.org/schema/aop"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+       http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+  <description>Shiro安全配置</description>
+  
+  <!-- 安全管理器 -->
+  <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+    <property name="realm" ref="shiroSecurityRealm" />
+    <property name="cacheManager" ref="shiroSpringCacheManager" />
+    <property name="rememberMeManager" ref="rememberMeManager" />
+  </bean>
+  
+  <!-- 項目自定义的Realm -->
+  <bean id="shiroSecurityRealm" class="org.cloud.activiti.security.ShiroSecurityRealm">
+    <constructor-arg index="0" name="cacheManager" ref="shiroSpringCacheManager" />
+    <constructor-arg index="1" name="matcher" ref="credentialsMatcher" />
+    <!-- 启用身份验证缓存，即缓存AuthenticationInfo信息，默认false -->
+    <property name="authenticationCachingEnabled" value="true" />
+    <!-- 缓存AuthenticationInfo信息的缓存名称 -->
+    <property name="authenticationCacheName" value="authenticationCache" />
+    <!-- 缓存AuthorizationInfo信息的缓存名称 -->
+    <property name="authorizationCacheName" value="authorizationCache" />
+  </bean>
+  
+  <!-- 用户授权信息Cache, 采用spring-cache, 具体请查看spring-ehcache.xml、spring-redis.xml -->
+  <bean id="shiroSpringCacheManager" class="org.cloud.activiti.security.cache.ShiroSpringCacheManager">
+    <property name="cacheManager" ref="cacheManager"/>
+  </bean>
+
+  <!-- ajax session超时时处理 -->
+  <bean id="ajaxSessionFilter" class="org.cloud.activiti.security.ShiroAjaxSessionFilter"/>
+
+  <!-- 会话ID生成器 -->
+  <bean id="sessionIdGenerator"
+    class="org.apache.shiro.session.mgt.eis.JavaUuidSessionIdGenerator" />
+
+  <!-- 会话Cookie模板 -->
+  <bean id="sessionIdCookie" class="org.apache.shiro.web.servlet.SimpleCookie">
+    <constructor-arg value="sid" />
+    <property name="httpOnly" value="true" />
+    <property name="maxAge" value="-1" />
+  </bean>
+
+  <!-- 记住密码Cookie -->
+  <bean id="rememberMeCookie" class="org.apache.shiro.web.servlet.SimpleCookie">
+    <constructor-arg value="rememberMe" />
+    <property name="httpOnly" value="true" />
+    <property name="maxAge" value="#{7 * 24 * 60 * 60}" /><!-- 30天 -->
+  </bean>
+
+  <!-- rememberMe管理器 -->
+  <bean id="rememberMeManager" class="org.apache.shiro.web.mgt.CookieRememberMeManager">
+    <property name="cipherKey"
+      value="#{T(org.apache.shiro.codec.Base64).decode('7gzYfKjTASKdsai43ds==')}" />
+    <property name="cookie" ref="rememberMeCookie" />
+  </bean>
+
+  <!-- shiro密码加密配置 -->
+  <bean id="passwordHash" class="org.cloud.activiti.security.PasswordHash">
+    <!-- 密码加密 1次md5,增强密码可修改此处 -->
+    <property name="algorithmName" value="md5" />
+    <property name="hashIterations" value="1" />
+  </bean>
+
+  <!-- 密码错误5次锁定半小时 -->
+  <bean id="credentialsMatcher" class="org.cloud.activiti.security.RetryLimitCredentialsMatcher">
+    <constructor-arg ref="shiroSpringCacheManager" />
+    <property name="retryLimitCacheName" value="halfHour" />
+    <property name="passwordHash" ref="passwordHash" />
+  </bean>
+
+  <!-- 会话DAO -->
+  <bean id="sessionDAO" class="org.apache.shiro.session.mgt.eis.EnterpriseCacheSessionDAO">
+    <property name="activeSessionsCacheName" value="shiro-activeSessionCache" />
+    <property name="sessionIdGenerator" ref="sessionIdGenerator" />
+    <property name="cacheManager" ref="shiroSpringCacheManager"/>
+  </bean>
+
+  <!-- 会话验证调度器 -->
+  <bean id="sessionValidationScheduler"
+    class="org.apache.shiro.session.mgt.quartz.QuartzSessionValidationScheduler">
+    <property name="sessionValidationInterval" value="#{30 * 1000}" />
+    <property name="sessionManager" ref="sessionManager" />
+  </bean>
+
+  <!-- 会话管理器 -->
+  <bean id="sessionManager" class="org.apache.shiro.web.session.mgt.DefaultWebSessionManager">
+    <property name="globalSessionTimeout" value="#{30 * 1000}" />
+    <property name="deleteInvalidSessions" value="true" />
+    <property name="sessionValidationSchedulerEnabled" value="true" />
+    <property name="sessionValidationScheduler" ref="sessionValidationScheduler" />
+    <property name="sessionDAO" ref="sessionDAO" />
+    <property name="sessionIdCookieEnabled" value="true" />
+    <property name="sessionIdCookie" ref="sessionIdCookie" />
+  </bean>
+
+  <bean id="formAuthenticationFilter"
+    class="org.apache.shiro.web.filter.authc.FormAuthenticationFilter">
+    <property name="rememberMeParam" value="rememberMe" />
+  </bean>
+
+  <bean id="userFilter" class="org.cloud.activiti.security.UserFilter" />
+
+  <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+    <property name="securityManager" ref="securityManager" />
+    <property name="loginUrl" value="/login" />
+    <property name="successUrl" value="/home" />
+    <property name="filterChainDefinitions">
+      <value>
+        <!--
+            anon  不需要认证
+            authc 需要认证
+            user  验证通过或RememberMe登录的都可以
+        -->
+        /assets/** = anon
+        /css/** = anon
+        /images/** = anon
+        /js/** = anon
+        /login = anon
+        /** = user
+      </value>
+    </property>
+    <property name="filters">
+      <map>
+        <entry key="user" value-ref="ajaxSessionFilter" />
+      </map>
+    </property>
+  </bean>
+
+  <!-- Post processor that automatically invokes init() and destroy() methods -->
+  <bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor" />
+
+</beans>

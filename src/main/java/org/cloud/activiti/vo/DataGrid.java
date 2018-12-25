@@ -5,7 +5,7 @@ import java.util.List;
 public class DataGrid<T> {
     private int current;
     private int rowCount;
-    private int total;
+    private long total;
     private List<T> rows;
 
     public int getCurrent() {
@@ -24,11 +24,11 @@ public class DataGrid<T> {
         this.rowCount = rowCount;
     }
 
-    public int getTotal() {
+    public long getTotal() {
         return total;
     }
 
-    public void setTotal(int total) {
+    public void setTotal(long total) {
         this.total = total;
     }
 

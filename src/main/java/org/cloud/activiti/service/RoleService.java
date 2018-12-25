@@ -1,29 +1,15 @@
 package org.cloud.activiti.service;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.cloud.activiti.entity.Permission;
 import org.cloud.activiti.entity.Role;
-import org.cloud.activiti.entity.User;
 
-public interface SystemService {
-    List<User> getAllUsers();
 
-    List<User> getPagedUsers(int pageNum, int pageSize);
-
-    User getUserById(int id);
-    
-    User getUserByName(String userName);
-
+public interface RoleService {
     List<Role> getRoles();
-
-    void deleteUser(int uid);
-
-    void addUser(User user, String[] roleNames);
-
-    void addUser(User user);
-
-    void updateUser(int uid, User user, String[] roleNames);
 
     List<Role> getPagedRoleInfo(int pageNum, int pageSize);
 
@@ -47,5 +33,5 @@ public interface SystemService {
 
     void deletePermission(int pid);
 
-    int getUidByUserName(String userName);
+    Map<String, Set<String>> getPermissionMapByUserId(int uid);
 }

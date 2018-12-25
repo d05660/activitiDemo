@@ -3,31 +3,41 @@ package org.cloud.activiti.entity;
 import java.util.List;
 
 public class Permission {
-	private int pid;
-	private String permissionName;
-	private List<RolePermission> rp;
+    private int pid;
+    private String permissionName;
+    private String url;
 
-	public int getPid() {
-		return pid;
-	}
+    public String getUrl() {
+        return url;
+    }
 
-	public void setPid(int pid) {
-		this.pid = pid;
-	}
+    public void setUrl(String url) {
+        this.url = url;
+    }
 
-	public String getPermissionName() {
-		return permissionName;
-	}
+    private List<RolePermission> rp;
 
-	public void setPermissionName(String permissionName) {
-		this.permissionName = permissionName;
-	}
+    public int getPid() {
+        return pid;
+    }
 
-	public List<RolePermission> getRp() {
-		return rp;
-	}
+    public void setPid(int pid) {
+        this.pid = pid;
+    }
 
-	public void setRp(List<RolePermission> rp) {
-		this.rp = rp;
-	}
+    public String getPermissionName() {
+        return permissionName;
+    }
+
+    public void setPermissionName(String permissionName) {
+        this.permissionName = permissionName;
+    }
+
+    public List<RolePermission> getRp() {
+        return rp;
+    }
+
+    public void setRp(List<RolePermission> rp) {
+        this.rp = rp;
+    }
 }

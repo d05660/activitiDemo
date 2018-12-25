@@ -57,6 +57,11 @@ public class VacationServiceImpl implements VacationService {
     }
 
     @Override
+    public long getDeptTaskCount(String userId) {
+        return taskService.createTaskQuery().taskCandidateGroup("部門経理").count();
+    }
+
+    @Override
     public List<Task> getDeptTasks(String userId) {
         return taskService.createTaskQuery().taskCandidateGroup("部門経理").list();
     }
@@ -103,6 +108,11 @@ public class VacationServiceImpl implements VacationService {
     }
 
     @Override
+    public long getHrTaskCount(String userId) {
+        return taskService.createTaskQuery().taskCandidateGroup("人事").count();
+    }
+
+    @Override
     public List<Task> getHrTasks(String userId) {
         return taskService.createTaskQuery().taskCandidateGroup("人事").list();
     }
@@ -135,14 +145,23 @@ public class VacationServiceImpl implements VacationService {
     }
 
     @Override
+    public long getUpdateApplyTaskCount(String userId) {
+        return taskService.createTaskQuery().taskCandidateOrAssigned(userId).taskName("?整申?").count();
+    }
+
+    @Override
     public List<Task> getUpdateApplyTasks(String userId) {
-        return taskService.createTaskQuery().taskCandidateOrAssigned(userId).taskName("?整申?")
-                .list();
+        return taskService.createTaskQuery().taskCandidateOrAssigned(userId).taskName("?整申?").list();
     }
 
     @Override
     public List<VacationRequest> getXJTaskByPage(int firstRow, int rowCount) {
         return getTaskListByPage("?假", firstRow, rowCount);
+    }
+
+    @Override
+    public long getXJTaskCount(String userId) {
+        return taskService.createTaskQuery().taskCandidateOrAssigned(userId).taskName("?假").count();
     }
 
     @Override

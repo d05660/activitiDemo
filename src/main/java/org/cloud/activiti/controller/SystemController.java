@@ -7,7 +7,8 @@ import org.cloud.activiti.entity.Permission;
 import org.cloud.activiti.entity.Role;
 import org.cloud.activiti.entity.User;
 import org.cloud.activiti.entity.UserRole;
-import org.cloud.activiti.service.SystemService;
+import org.cloud.activiti.service.RoleService;
+import org.cloud.activiti.service.UserService;
 import org.cloud.activiti.vo.DataGrid;
 import org.cloud.activiti.vo.UserInfo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +23,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 public class SystemController {
     @Autowired
-    SystemService systemService;
+    UserService userService;
+    @Autowired
+    private RoleService roleService;
 
     @RequestMapping("/useradmin")
     String useradmin() {
@@ -43,8 +46,8 @@ public class SystemController {
     @ResponseBody
     DataGrid<UserInfo> userlist(@RequestParam("current") int current,
             @RequestParam("rowCount") int rowCount) {
-        int total = systemService.getAllUsers().size();
-        List<User> userlist = systemService.getPagedUsers(current, rowCount);
+        int total = userService.getAllUsers().size();
+        List<User> userlist = userService.getPagedUsers(current, rowCount);
         List<UserInfo> users = new ArrayList<UserInfo>();
         for (User user : userlist) {
             UserInfo u = new UserInfo();
@@ -77,21 +80,21 @@ public class SystemController {
     @RequestMapping(value = "/user/{uid}", method = RequestMethod.GET)
     @ResponseBody
     User getuserinfo(@PathVariable("uid") int userid) {
-        return systemService.getUserById(userid);
+        return userService.getUserById(userid);
     }
 
     @RequestMapping(value = "/rolelist", method = RequestMethod.GET)
     @ResponseBody
     List<Role> getroles() {
-        return systemService.getRoles();
+        return roleService.getRoles();
     }
 
     @RequestMapping(value = "/roles", method = RequestMethod.GET)
     @ResponseBody
     DataGrid<Role> getallroles(@RequestParam("current") int current,
             @RequestParam("rowCount") int rowCount) {
-        List<Role> roles = systemService.getRoleInfo();
-        List<Role> rows = systemService.getPagedRoleInfo(current, rowCount);
+        List<Role> roles = roleService.getRoleInfo();
+        List<Role> rows = roleService.getPagedRoleInfo(current, rowCount);
         DataGrid<Role> grid = new DataGrid<Role>();
         grid.setCurrent(current);
         grid.setRowCount(rowCount);
@@ -102,7 +105,7 @@ public class SystemController {
 
     @RequestMapping(value = "/deleteuser/{uid}", method = RequestMethod.GET)
     String deleteuser(@PathVariable("uid") int uid) {
-        systemService.deleteUser(uid);
+        userService.deleteUser(uid);
         return "system/useradmin";
     }
 
@@ -110,23 +113,23 @@ public class SystemController {
     String adduser(@ModelAttribute("user") User user,
             @RequestParam(value = "rolename[]", required = false) String[] rolename) {
         if (rolename == null)
-            systemService.addUser(user);
+            userService.addUser(user);
         else
-            systemService.addUser(user, rolename);
+            userService.addUser(user, rolename);
         return "forward:/useradmin";
     }
 
     @RequestMapping(value = "/updateuser/{uid}", method = RequestMethod.POST)
     String updateuser(@PathVariable("uid") int uid, @ModelAttribute("user") User user,
             @RequestParam(value = "rolename[]", required = false) String[] rolename) {
-        systemService.updateUser(uid, user, rolename);
+        userService.updateUser(uid, user, rolename);
         return "system/useradmin";
     }
 
     @RequestMapping(value = "permissionlist", method = RequestMethod.GET)
     @ResponseBody
     List<Permission> getPermisions() {
-        return systemService.getPermissions();
+        return roleService.getPermissions();
     }
 
     @RequestMapping(value = "addrole", method = RequestMethod.POST)
@@ -134,27 +137,27 @@ public class SystemController {
             @RequestParam(value = "permissionname[]") String[] permissionname) {
         Role r = new Role();
         r.setRoleName(rolename);
-        systemService.addRole(r, permissionname);
+        roleService.addRole(r, permissionname);
         return "forward:/roleadmin";
     }
 
     @RequestMapping(value = "/deleteRole/{rid}", method = RequestMethod.GET)
     String deleterole(@PathVariable("rid") int rid) {
-        systemService.deleteRole(rid);
+        roleService.deleteRole(rid);
         return "system/roleadmin";
     }
 
     @RequestMapping(value = "roleInfo/{rid}", method = RequestMethod.GET)
     @ResponseBody
     Role getRolebyrid(@PathVariable("rid") int rid) {
-        return systemService.getRoleById(rid);
+        return roleService.getRoleById(rid);
     }
 
     @RequestMapping(value = "updateRole/{rid}", method = RequestMethod.POST)
     String updaterole(@PathVariable("rid") int rid,
             @RequestParam(value = "permissionname[]") String[] permissionnames) {
-        systemService.deleteRolePermission(rid);
-        systemService.updateRole(rid, permissionnames);
+        roleService.deleteRolePermission(rid);
+        roleService.updateRole(rid, permissionnames);
         return "system/roleadmin";
     }
 
@@ -162,8 +165,8 @@ public class SystemController {
     @ResponseBody
     DataGrid<Permission> getpermissions(@RequestParam("current") int current,
             @RequestParam("rowCount") int rowCount) {
-        List<Permission> p = systemService.getPermissions();
-        List<Permission> list = systemService.getPagedPermissions(current, rowCount);
+        List<Permission> p = roleService.getPermissions();
+        List<Permission> list = roleService.getPagedPermissions(current, rowCount);
         DataGrid<Permission> grid = new DataGrid<Permission>();
         grid.setCurrent(current);
         grid.setRowCount(rowCount);
@@ -174,13 +177,13 @@ public class SystemController {
 
     @RequestMapping(value = "addPermission", method = RequestMethod.POST)
     String addpermission(@RequestParam("permissionName") String permissionName) {
-        systemService.addPermission(permissionName);
+        roleService.addPermission(permissionName);
         return "system/permissionadmin";
     }
 
     @RequestMapping(value = "deletePermission/{pid}", method = RequestMethod.GET)
     String deletepermission(@PathVariable("pid") int pid) {
-        systemService.deletePermission(pid);
+        roleService.deletePermission(pid);
         return "system/permissionadmin";
     }
 
