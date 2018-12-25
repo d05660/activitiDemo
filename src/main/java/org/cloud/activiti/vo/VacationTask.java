@@ -1,12 +1,8 @@
-package org.cloud.activiti.entity;
+package org.cloud.activiti.vo;
 
-import java.io.Serializable;
+import java.util.Date;
 
-import org.activiti.engine.task.Task;
-
-public class LeaveApply implements Serializable {
-
-    private static final long serialVersionUID = 1L;
+public class VacationTask {
     private int id;
     private String processInstanceId;
     private String userId;
@@ -17,7 +13,10 @@ public class LeaveApply implements Serializable {
     private String applyTime;
     private String realityStartTime;
     private String realityEndTime;
-    private Task task;
+    private String taskId;
+    private String taskName;
+    private String processDefId;
+    private Date taskCreateTime;
 
     public int getId() {
         return id;
@@ -99,12 +98,36 @@ public class LeaveApply implements Serializable {
         this.realityEndTime = realityEndTime;
     }
 
-    public Task getTask() {
-        return task;
+    public String getTaskId() {
+        return taskId;
     }
 
-    public void setTask(Task task) {
-        this.task = task;
+    public void setTaskId(String taskId) {
+        this.taskId = taskId;
+    }
+
+    public String getTaskName() {
+        return taskName;
+    }
+
+    public void setTaskName(String taskName) {
+        this.taskName = taskName;
+    }
+
+    public String getProcessDefId() {
+        return processDefId;
+    }
+
+    public void setProcessDefId(String processDefId) {
+        this.processDefId = processDefId;
+    }
+
+    public Date getTaskCreateTime() {
+        return taskCreateTime;
+    }
+
+    public void setTaskCreateTime(Date taskCreateTime) {
+        this.taskCreateTime = taskCreateTime;
     }
 
 }

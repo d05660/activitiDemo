@@ -80,4 +80,17 @@
     WHERE
       username=#{username}
   </select>
+
+  <select id="getUserByName" resultMap="userMap">
+    SELECT
+      * 
+    FROM
+      t_user 
+    LEFT JOIN
+      t_user_role ON t_user.uid=t_user_role.userid 
+    LEFT JOIN
+      t_role ON t_user_role.roleid=t_role.rid
+    WHERE 
+      t_user.username=#{username}
+  </select>
 </mapper>

@@ -1,8 +1,12 @@
 package org.cloud.activiti.entity;
 
-import java.util.Date;
+import java.io.Serializable;
 
-public class LeaveTask {
+import org.activiti.engine.task.Task;
+
+public class VacationRequest implements Serializable {
+
+    private static final long serialVersionUID = 1L;
     private int id;
     private String processInstanceId;
     private String userId;
@@ -13,10 +17,7 @@ public class LeaveTask {
     private String applyTime;
     private String realityStartTime;
     private String realityEndTime;
-    private String taskId;
-    private String taskName;
-    private String processDefId;
-    private Date taskCreateTime;
+    private Task task;
 
     public int getId() {
         return id;
@@ -98,36 +99,12 @@ public class LeaveTask {
         this.realityEndTime = realityEndTime;
     }
 
-    public String getTaskId() {
-        return taskId;
+    public Task getTask() {
+        return task;
     }
 
-    public void setTaskId(String taskId) {
-        this.taskId = taskId;
-    }
-
-    public String getTaskName() {
-        return taskName;
-    }
-
-    public void setTaskName(String taskName) {
-        this.taskName = taskName;
-    }
-
-    public String getProcessDefId() {
-        return processDefId;
-    }
-
-    public void setProcessDefId(String processDefId) {
-        this.processDefId = processDefId;
-    }
-
-    public Date getTaskCreateTime() {
-        return taskCreateTime;
-    }
-
-    public void setTaskCreateTime(Date taskCreateTime) {
-        this.taskCreateTime = taskCreateTime;
+    public void setTask(Task task) {
+        this.task = task;
     }
 
 }

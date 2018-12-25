@@ -12,6 +12,8 @@ public interface SystemService {
     List<User> getPagedUsers(int pageNum, int pageSize);
 
     User getUserById(int id);
+    
+    User getUserByName(String userName);
 
     List<Role> getRoles();
 

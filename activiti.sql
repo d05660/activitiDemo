@@ -60,7 +60,7 @@ INSERT INTO `t_role` VALUES (2, '出纳员');
 INSERT INTO `t_role` VALUES (3, '总经理');
 INSERT INTO `t_role` VALUES (7, '职员');
 INSERT INTO `t_role` VALUES (4, '财务管理员');
-INSERT INTO `t_role` VALUES (5, '部门经理');
+INSERT INTO `t_role` VALUES (5, '部門経理');
 INSERT INTO `t_role` VALUES (6, '采购经理');
 
 -- ----------------------------

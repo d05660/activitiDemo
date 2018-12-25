@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.cloud.activiti.mapper.VacationMapper">
+
+  <resultMap type="Vacation" id="vacationMap">
+    <id column="id" property="id"></id>
+    <result column="process_instance_id" property="processInstanceId" />
+    <result column="user_id" property="userId" />
+    <result column="start_time" property="startTime" />
+    <result column="end_time" property="endTime" />
+    <result column="leave_type" property="leaveType" />
+    <result column="reason" property="leaveType" />
+    <result column="apply_time" property="applyTime" />
+    <result column="reality_start_time" property="realityStartTime" />
+    <result column="reality_end_time" property="realityEndTime" />
+  </resultMap>
+  
+  <select id="get" resultType="vacationMap" parameterType="int">
+    SELECT
+      * 
+    FROM
+      t_leaveapply 
+    WHERE
+      id=#{id}
+  </select>
+  
+  <insert id="save" useGeneratedKeys="true" keyProperty="id" parameterType="Vacation">
+    INSERT INTO 
+      t_leaveapply
+      (id,process_instance_id,user_id,start_time,end_time,
+      leave_type,reason,apply_time,reality_start_time,reality_end_time)
+    VALUES
+      (#{id},#{processInstanceId},#{userId},#{startTime},#{endTime},
+      #{leaveType},#{reason},#{applyTime},#{realityStartTime},#{realityEndTime})
+  </insert>
+  
+  <update id="update" parameterType="Vacation">
+    UPDATE 
+      t_leaveapply
+    SET 
+      process_instance_id=#{processInstanceId},
+      reality_start_time=#{realityStartTime},
+      reality_end_time=#{realityEndTime},
+      start_time=#{startTime},
+      end_time=#{endTime},
+      leave_type=#{leaveType},
+      reason=#{reason}
+    WHERE 
+      id=#{id}
+  </update>
+</mapper>
