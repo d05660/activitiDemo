@@ -8,19 +8,24 @@ import org.apache.shiro.codec.CodecSupport;
 import org.apache.shiro.codec.Hex;
 import org.apache.shiro.util.ByteSource;
 
+/**
+ * shiro密码盐加密所用
+ * 此处为了redis缓存实现序列化
+ * @author L.cm
+ *
+ */
 public class ShiroByteSource implements ByteSource, Serializable {
     private static final long serialVersionUID = -6814382603612799610L;
     private volatile byte[] bytes;
     private String cachedHex;
     private String cachedBase64;
 
-    public ShiroByteSource() {
-    }
+    public ShiroByteSource() {}
 
     public ShiroByteSource(String string) {
         this.bytes = CodecSupport.toBytes(string);
     }
-
+    
     public void setBytes(byte[] bytes) {
         this.bytes = bytes;
     }
@@ -32,7 +37,7 @@ public class ShiroByteSource implements ByteSource, Serializable {
 
     @Override
     public String toHex() {
-        if (this.cachedHex == null) {
+        if ( this.cachedHex == null ) {
             this.cachedHex = Hex.encodeToString(getBytes());
         }
         return this.cachedHex;
@@ -40,7 +45,7 @@ public class ShiroByteSource implements ByteSource, Serializable {
 
     @Override
     public String toBase64() {
-        if (this.cachedBase64 == null) {
+        if ( this.cachedBase64 == null ) {
             this.cachedBase64 = Base64.encodeToString(getBytes());
         }
         return this.cachedBase64;
@@ -50,7 +55,7 @@ public class ShiroByteSource implements ByteSource, Serializable {
     public boolean isEmpty() {
         return this.bytes == null || this.bytes.length == 0;
     }
-
+    
     @Override
     public String toString() {
         return toBase64();
@@ -75,18 +80,15 @@ public class ShiroByteSource implements ByteSource, Serializable {
         }
         return false;
     }
-
+    
     /**
-     * Returns a new {@code ByteSource} instance representing the specified
-     * string's bytes. The byte array is obtained assuming {@code UTF-8}
-     * encoding.
+     * Returns a new {@code ByteSource} instance representing the specified string's bytes.  The byte
+     * array is obtained assuming {@code UTF-8} encoding.
      *
      * @param string the string to represent as a {@code ByteSource} instance.
-     * @return a new {@code ByteSource} instance representing the specified
-     *         string's bytes.
+     * @return a new {@code ByteSource} instance representing the specified string's bytes.
      */
     public static ByteSource of(String string) {
         return new ShiroByteSource(string);
     }
-
 }

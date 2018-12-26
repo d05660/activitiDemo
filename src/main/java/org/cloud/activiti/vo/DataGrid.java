@@ -7,6 +7,18 @@ public class DataGrid<T> {
     private int rowCount;
     private long total;
     private List<T> rows;
+    
+    public DataGrid() {
+        super();
+    }
+
+    public DataGrid(int current, int rowCount, long total, List<T> rows) {
+        super();
+        this.current = current;
+        this.rowCount = rowCount;
+        this.total = total;
+        this.rows = rows;
+    }
 
     public int getCurrent() {
         return current;

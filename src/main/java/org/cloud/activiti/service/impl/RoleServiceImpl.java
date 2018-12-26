@@ -15,11 +15,18 @@ import org.cloud.activiti.mapper.PermissionMapper;
 import org.cloud.activiti.mapper.RoleMapper;
 import org.cloud.activiti.mapper.UserMapper;
 import org.cloud.activiti.service.RoleService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.github.pagehelper.PageHelper;
 
+@Service
 public class RoleServiceImpl implements RoleService {
+    
+    private final Logger logger = LoggerFactory.getLogger(getClass());
+    
     @Autowired
     private UserMapper userMapper;
     @Autowired
@@ -85,6 +92,7 @@ public class RoleServiceImpl implements RoleService {
             roles.add(roleName);
             Role role = roleMapper.getRoleByName(roleName);
             if (role != null) {
+                logger.debug(role.toString());
                 for (RolePermission rolePermission : role.getRolePermissions()) {
                     urlSet.add(rolePermission.getPermission().getUrl());
                 }

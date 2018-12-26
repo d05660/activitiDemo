@@ -3,15 +3,18 @@ package org.cloud.activiti.util;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.activiti.engine.repository.ProcessDefinition;
+import org.activiti.engine.runtime.ProcessInstance;
 import org.cloud.activiti.entity.VacationRequest;
 import org.cloud.activiti.vo.DataGrid;
+import org.cloud.activiti.vo.ProcessInfo;
+import org.cloud.activiti.vo.RunningProcess;
 import org.cloud.activiti.vo.VacationTask;
 
 public class CollectionUtil {
 
-    public static DataGrid<VacationTask> convertReuestToTask(List<VacationRequest> requests, int current, 
-            int rowCount, long totalSize) {
-        DataGrid<VacationTask> grid = new DataGrid<VacationTask>();
+    public static DataGrid<VacationTask> vacationRequestToVacationTask(int current, int rowCount,
+            long totalSize, List<VacationRequest> requests) {
         List<VacationTask> tasks = new ArrayList<VacationTask>();
         for (VacationRequest apply : requests) {
             VacationTask task = new VacationTask();
@@ -29,11 +32,37 @@ public class CollectionUtil {
             task.setTaskName(apply.getTask().getName());
             tasks.add(task);
         }
-        grid.setRowCount(rowCount);
-        grid.setCurrent(current);
-        grid.setTotal(totalSize);
-        grid.setRows(tasks);
-        return grid;
+        return new DataGrid<VacationTask>(current, rowCount, totalSize, tasks);
+    }
+
+    public static DataGrid<ProcessInfo> processDefinitionToProcessInfo(int current, int rowCount,
+            long totalSize, List<ProcessDefinition> requests) {
+        List<ProcessInfo> mInfos = new ArrayList<ProcessInfo>();
+        for (ProcessDefinition processDefinition : requests) {
+            ProcessInfo processInfo = new ProcessInfo();
+            processInfo.setId(processDefinition.getId());
+            processInfo.setDeploymentId(processDefinition.getDeploymentId());
+            processInfo.setKey(processDefinition.getKey());
+            processInfo.setName(processDefinition.getName());
+            processInfo.setResourceName(processDefinition.getResourceName());
+            processInfo.setDiagramResourceName(processDefinition.getDiagramResourceName());
+            mInfos.add(processInfo);
+        }
+        return new DataGrid<ProcessInfo>(current, rowCount, totalSize, mInfos);
+    }
+
+    public static DataGrid<RunningProcess> processInstanceToRunningProcess(int current,
+            int rowCount, long totalSize, List<ProcessInstance> requests) {
+        List<RunningProcess> mList = new ArrayList<RunningProcess>();
+        for (ProcessInstance processDefinition : requests) {
+            RunningProcess process = new RunningProcess();
+            process.setActivityid(processDefinition.getActivityId());
+            process.setBusinesskey(processDefinition.getBusinessKey());
+            process.setExecutionid(processDefinition.getId());
+            process.setProcessInstanceid(processDefinition.getProcessInstanceId());
+            mList.add(process);
+        }
+        return new DataGrid<RunningProcess>(current, rowCount, totalSize, mList);
     }
 
 }

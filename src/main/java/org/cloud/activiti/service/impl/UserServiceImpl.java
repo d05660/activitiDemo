@@ -1,8 +1,11 @@
 package org.cloud.activiti.service.impl;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.cloud.activiti.entity.Role;
+import org.cloud.activiti.entity.RolePermission;
 import org.cloud.activiti.entity.User;
 import org.cloud.activiti.entity.UserRole;
 import org.cloud.activiti.mapper.RoleMapper;
@@ -88,5 +91,31 @@ public class UserServiceImpl implements UserService {
                 roleMapper.addUserRole(ur);
             }
         }
+    }
+
+    @Override
+    public Set<String> getRolesByUserName(String username) {
+        Set<String> rolesSet = new HashSet<>();
+        User user = userMapper.getUserByName(username);
+        for (UserRole userRole : user.getUserRoles()) {
+            String roleName = userRole.getRole().getRoleName();
+            rolesSet.add(roleName);
+        }
+        return rolesSet;
+    }
+
+    @Override
+    public Set<String> getPermissionsByUserName(String username) {
+        Set<String> permissions = new HashSet<>();
+        User user = userMapper.getUserByName(username);
+        for (UserRole ur : user.getUserRoles()) {
+            Role role = roleMapper.getRoleById(ur.getRole().getRid());
+            List<RolePermission> rps = role.getRolePermissions();
+            for (RolePermission rp : rps) {
+                String permission = rp.getPermission().getPermissionName();
+                permissions.add(permission);
+            }
+        }
+        return permissions;
     }
 }

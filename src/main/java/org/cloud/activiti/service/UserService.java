@@ -1,6 +1,7 @@
 package org.cloud.activiti.service;
 
 import java.util.List;
+import java.util.Set;
 
 import org.cloud.activiti.entity.User;
 
@@ -23,4 +24,8 @@ public interface UserService {
     void updateUser(int uid, User user, String[] roleNames);
     
     int getUidByUserName(String userName);
+
+    Set<String> getRolesByUserName(String username);
+
+    Set<String> getPermissionsByUserName(String username);
 }

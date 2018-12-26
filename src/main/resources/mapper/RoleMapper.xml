@@ -38,10 +38,16 @@
       (#{user.uid},#{role.rid})
   </insert>
   
-  <select id="getRoleByName" resultType="Role" parameterType="String">
+  <select id="getRoleByName" resultMap="roleMap" parameterType="String">
     SELECT * 
-    FROM t_role 
-    WHERE rolename=#{roleName}
+    FROM 
+      t_role 
+    LEFT JOIN 
+      t_role_permission ON t_role.rid=t_role_permission.roleid 
+    LEFT JOIN 
+      t_permission ON t_role_permission.permissionid=t_permission.pid 
+    WHERE 
+      t_role.rolename=#{roleName}
   </select>
   
   <insert id="addRole" useGeneratedKeys="true" keyProperty="rid" parameterType="Role">

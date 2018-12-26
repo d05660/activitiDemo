@@ -1,14 +1,21 @@
 package org.cloud.activiti.security;
 
-import org.apache.shiro.web.util.WebUtils;
-import org.cloud.activiti.util.StringUtils;
-import org.apache.shiro.web.filter.authc.UserFilter;
-
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.shiro.web.filter.authc.UserFilter;
+import org.cloud.activiti.util.StringUtils;
+import org.apache.shiro.web.util.WebUtils;
+
+/**
+ * ajax shiro session超时统一处理
+ * 
+ * 参考：http://looooj.github.io/blog/2014/06/17/shiro-user-filter.html
+ * @author L.cm
+ *
+ */
 public class ShiroAjaxSessionFilter extends UserFilter {
 
     @Override
@@ -19,10 +26,12 @@ public class ShiroAjaxSessionFilter extends UserFilter {
             if (xmlHttpRequest.equalsIgnoreCase("XMLHttpRequest")) {
                 HttpServletResponse res = WebUtils.toHttp(response);
                 // 采用res.sendError(401);在Easyui中会处理掉error，$.ajaxSetup中监听不到
+
                 res.setHeader("oauthstatus", "401");
                 return false;
             }
         }
         return super.onAccessDenied(request, response);
     }
+
 }

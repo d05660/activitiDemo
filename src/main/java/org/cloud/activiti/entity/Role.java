@@ -49,4 +49,10 @@ public class Role {
 	public void setRolePermissions(List<RolePermission> rolePermissions) {
 		this.rolePermissions = rolePermissions;
 	}
+
+    @Override
+    public String toString() {
+        return "Role [rid=" + rid + ", roleName=" + roleName + ", userRoles=" + userRoles
+                + ", rolePermissions=" + rolePermissions + "]";
+    }
 }

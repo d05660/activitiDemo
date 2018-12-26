@@ -1,0 +1,20 @@
+body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,form,fieldset,input,p,blockquote,th,td{margin:0;padding:0;border:none;}
+body{font-size:12px; font-family:Cambria, "Hoefler Text", "Liberation Serif", Times, "Times New Roman", serifbackground:#fff;color:#2b2b2b;background-color:#3987cf;}
+address,caption,cite,code,dfn,em,strong,th,var{font-style:normal;font-weight:normal;}
+select,input,img{vertical-align:middle;}
+table{border-collapse:collapse;border-spacing:0;}
+table,td,tr,th{font-size:12px;}
+a{text-decoration:none;cursor:pointer;}
+fieldset,img{border:0;}
+.main{ position:absolute;left:50%; top:50%; background:url(../images/login.png) no-repeat; width:772px; height:468px; margin:-234px 0 0 -386px;}
+.input-box{ position:absolute; top:110px; left:410px;color:#0952a1;}
+.input-box input{ border:1px solid #7491b5; width:154px; height:28px; background-color:#f5fafe; padding-left:4px; line-height:28px;}
+.input-box p{ line-height:40px;}
+.input-box .check{ width:14px; height:14px; margin-left:48px;}
+.input-box .record{ margin-left:6px;}
+.input-box .link{ margin-top:14px; margin-left:70px;}
+a{ height:28px; width:72px; display:inline-block; color:#fff; line-height:28px; text-align:center; margin-top:10px;}
+.log{ background:url(../images/log.png) no-repeat; margin-right:16px; margin-left:48px}
+.reset{ background:url(../images/reset.png) no-repeat; color:#6d6d6d;}
+.main-box .copy{ text-align:center; margin-top:8px; color:#666666;}
+.text{ text-align:center; color:#fff; margin-top:398px; line-height:24px;}

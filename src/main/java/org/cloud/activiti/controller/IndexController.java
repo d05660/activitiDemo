@@ -2,14 +2,13 @@ package org.cloud.activiti.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 public class IndexController {
     
-    @RequestMapping(value = "/index", method = RequestMethod.GET)
-    public String registerForm(Model model) {
+    @GetMapping(value = "/index")
+    public String getIndex(Model model) {
         model.addAttribute("name", "world");
         return "index";
     }

@@ -15,7 +15,7 @@
   <!-- 1.启动注解，注册服务，如验证框架、全局类型转换器 -->
   <mvc:annotation-driven />
 
-  <mvc:resources mapping="/static/**/" location="/static/"/>  
+  <mvc:resources mapping="/assets/**/" location="/assets/"/>  
 
   <!-- 2.启动自动扫描,只加载controller的时候,不加载service,因为此时事物并未生效,若此时加载了service,那么事物无法对service进行拦截 -->
   <context:component-scan base-package="org.cloud.activiti.controller" />
