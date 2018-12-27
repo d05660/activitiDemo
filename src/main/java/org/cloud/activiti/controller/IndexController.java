@@ -15,10 +15,21 @@ public class IndexController {
         return "index";
     }
     
-    @RequiresPermissions(value = { "L3" })
+    @GetMapping("/empList")
+    public String getEmpPage(Model model) {
+        return "emps";
+    }
+    
+    @RequiresPermissions(value = { "L1" })
     @GetMapping(value = "/manager/details")
     @ResponseBody
     public String getManager() {
+        return "manager";
+    }
+    
+    @GetMapping(value = "/index1")
+    public String getManager(Model model) {
+        model.addAttribute("name", "world");
         return "manager";
     }
 

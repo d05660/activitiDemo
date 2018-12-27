@@ -35,8 +35,8 @@ public class IndexControllerTest {
     
     private final Logger LOGGER = LoggerFactory.getLogger(getClass());
 
-    @Autowired
-    private IndexController indexController;
+//    @Autowired
+//    private IndexController indexController;
 
     @Resource
     private SessionDAO sessionDAO;
@@ -53,8 +53,7 @@ public class IndexControllerTest {
     private MockHttpServletResponse mockHttpServletResponse;
 
     private void login(String username, String password) {
-        subject = new WebSubject.Builder(mockHttpServletRequest, mockHttpServletResponse)
-                .buildWebSubject();
+        subject = new WebSubject.Builder(mockHttpServletRequest, mockHttpServletResponse).buildWebSubject();
         UsernamePasswordToken token = new UsernamePasswordToken(username, password, true);
         subject.login(token);
         ThreadContext.bind(subject);
@@ -62,15 +61,13 @@ public class IndexControllerTest {
 
     @Before
     public void setUp() throws Exception {
-        mockHttpServletRequest = new MockHttpServletRequest(
-                webApplicationContext.getServletContext());
+        mockHttpServletRequest = new MockHttpServletRequest(webApplicationContext.getServletContext());
         mockHttpServletResponse = new MockHttpServletResponse();
-        MockHttpSession mockHttpSession = new MockHttpSession(
-                webApplicationContext.getServletContext());
+        MockHttpSession mockHttpSession = new MockHttpSession(webApplicationContext.getServletContext());
         mockHttpServletRequest.setSession(mockHttpSession);
         SecurityUtils.setSecurityManager(securityManager);
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
-        login("test1", "123456");
+        login("admin", "123456");
     }
 
     @Test
@@ -88,7 +85,7 @@ public class IndexControllerTest {
                         .reduce((x, y) -> x + "," + y)
                         .orElse(""));
         LOGGER.error("-------------测试同一用户异地登录将另一session踢出,该过程在CredentialsMatcher进行处理-------------");
-        login("test1", "123456");
+        login("admin", "123456");
         LOGGER.error("get page result:" + mockMvc
                 .perform(MockMvcRequestBuilders.get("/manager/details"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -102,17 +99,18 @@ public class IndexControllerTest {
                         .orElse(""));
         LOGGER.error("-------------测试登出后权限-------------");
         subject.logout();
+        LOGGER.error("all session id:" +
+                sessionDAO.getActiveSessions().stream()
+                        .map(Session::getId)
+                        .reduce((x, y) -> x + "," + y)
+                        .orElse(""));
         LOGGER.error("logout page result:" + mockMvc
                 .perform(MockMvcRequestBuilders.get("/manager/details"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn()
                 .getResponse()
                 .getContentAsString());
-        LOGGER.error("all session id:" +
-                sessionDAO.getActiveSessions().stream()
-                        .map(Session::getId)
-                        .reduce((x, y) -> x + "," + y)
-                        .orElse(""));
+       
 
     }
 }

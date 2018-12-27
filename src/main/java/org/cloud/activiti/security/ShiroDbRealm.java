@@ -1,9 +1,12 @@
 package org.cloud.activiti.security;
 
+import java.util.Set;
+
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.SimpleAuthenticationInfo;
+import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authc.credential.CredentialsMatcher;
 import org.apache.shiro.authz.AuthorizationInfo;
@@ -11,7 +14,6 @@ import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.cache.CacheManager;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
-import org.apache.shiro.subject.SimplePrincipalCollection;
 import org.cloud.activiti.entity.User;
 import org.cloud.activiti.service.UserService;
 import org.slf4j.Logger;
@@ -44,9 +46,9 @@ public class ShiroDbRealm extends AuthorizingRealm {
         // 账号不存在
         if (user == null) {
             LOGGER.error("username or password error");
-            return null;
+            throw new UnknownAccountException();//没找到帐号
         }
-
+        
         // 认证缓存信息
         return new SimpleAuthenticationInfo(userName, user.getPassword().toCharArray(),
                 ShiroByteSource.of(user.getUsername()), getName());
@@ -60,9 +62,13 @@ public class ShiroDbRealm extends AuthorizingRealm {
         String username = (String) principals.getPrimaryPrincipal();
 
         SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
-        info.setRoles(userService.getRolesByUserName(username));
-        info.setStringPermissions(userService.getPermissionsByUserName(username));
-
+        Set<String> roleSet = userService.getRolesByUserName(username);
+        info.setRoles(roleSet);
+        LOGGER.info(roleSet.stream().reduce((x, y) -> x + "," + y).orElse(""));
+        
+        Set<String> permissionSet = userService.getPermissionsByUserName(username);
+        info.setStringPermissions(permissionSet);
+        LOGGER.info(permissionSet.stream().reduce((x, y) -> x + "," + y).orElse(""));
         return info;
     }
 
@@ -77,15 +83,32 @@ public class ShiroDbRealm extends AuthorizingRealm {
         String shiroUser = (String) super.getAvailablePrincipal(principals);
         return shiroUser;
     }
-
-    /**
-     * 清除用户缓存
-     * 
-     * @param loginName
-     */
-    public void removeUserCache(String loginName) {
-        SimplePrincipalCollection principals = new SimplePrincipalCollection();
-        principals.add(loginName, super.getName());
+    
+    @Override
+    public void clearCachedAuthorizationInfo(PrincipalCollection principals) {
+        super.clearCachedAuthorizationInfo(principals);
+    }
+ 
+    @Override
+    public void clearCachedAuthenticationInfo(PrincipalCollection principals) {
         super.clearCachedAuthenticationInfo(principals);
+    }
+ 
+    @Override
+    public void clearCache(PrincipalCollection principals) {
+        super.clearCache(principals);
+    }
+ 
+    public void clearAllCachedAuthorizationInfo() {
+        getAuthorizationCache().clear();
+    }
+ 
+    public void clearAllCachedAuthenticationInfo() {
+        getAuthenticationCache().clear();
+    }
+ 
+    public void clearAllCache() {
+        clearAllCachedAuthenticationInfo();
+        clearAllCachedAuthorizationInfo();
     }
 }
