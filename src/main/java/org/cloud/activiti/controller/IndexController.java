@@ -15,7 +15,7 @@ public class IndexController {
         return "index";
     }
     
-    @RequiresPermissions(value = { "deptManager" })
+    @RequiresPermissions(value = { "L3" })
     @GetMapping(value = "/manager/details")
     @ResponseBody
     public String getManager() {

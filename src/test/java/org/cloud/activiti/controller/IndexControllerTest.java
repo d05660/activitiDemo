@@ -70,7 +70,7 @@ public class IndexControllerTest {
         mockHttpServletRequest.setSession(mockHttpSession);
         SecurityUtils.setSecurityManager(securityManager);
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
-        login("admin", "123456");
+        login("test1", "123456");
     }
 
     @Test
@@ -88,7 +88,7 @@ public class IndexControllerTest {
                         .reduce((x, y) -> x + "," + y)
                         .orElse(""));
         LOGGER.error("-------------测试同一用户异地登录将另一session踢出,该过程在CredentialsMatcher进行处理-------------");
-        login("admin", "123456");
+        login("test1", "123456");
         LOGGER.error("get page result:" + mockMvc
                 .perform(MockMvcRequestBuilders.get("/manager/details"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
