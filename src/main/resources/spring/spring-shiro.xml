@@ -3,9 +3,9 @@
   xmlns:util="http://www.springframework.org/schema/util" xmlns:aop="http://www.springframework.org/schema/aop"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="
-       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-       http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
-       http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+       http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.3.xsd
+       http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd">
 
   <description>Shiro安全配置</description>
 
@@ -14,19 +14,15 @@
     <!--设置自定义Realm -->
     <property name="realm" ref="shiroDbRealm" />
     <!--将缓存管理器，交给安全管理器 -->
-    <property name="cacheManager" ref="shiroSpringCacheManager" />
+    <property name="cacheManager" ref="shiroCacheManager" />
     <!-- 记住密码管理 -->
     <property name="rememberMeManager" ref="rememberMeManager" />
     <property name="sessionManager" ref="sessionManager" />
   </bean>
 
-  <!-- <bean id="cacheManager" class="org.apache.shiro.cache.MemoryConstrainedCacheManager" 
-    /> -->
-
   <!-- 項目自定义的Realm -->
   <bean id="shiroDbRealm" class="org.cloud.activiti.security.ShiroDbRealm">
-    <constructor-arg index="0" name="cacheManager"
-      ref="shiroSpringCacheManager" />
+    <constructor-arg index="0" name="cacheManager" ref="shiroCacheManager" />
     <constructor-arg index="1" name="matcher" ref="credentialsMatcher" />
     <!-- 启用身份验证缓存，即缓存AuthenticationInfo信息，默认false -->
     <property name="authenticationCachingEnabled" value="true" />
@@ -92,10 +88,19 @@
   </bean>
   <!-- ajax session超时时处理 -->
   <bean id="ajaxSessionFilter" class="org.cloud.activiti.security.ShiroAjaxSessionFilter" />
-
-  <!-- 用户授权信息Cache, 采用spring-cache, 具体请查看spring-ehcache.xml、spring-redis.xml -->
-  <bean id="shiroSpringCacheManager" class="org.cloud.activiti.security.ShiroSpringCacheManager">
-    <property name="cacheManager" ref="cacheManager" />
+  
+  <!-- Spring提供的Ehcache实现的缓存管理器 -->
+  <!-- 配置 Spring 的 EhCacheManagerFactoryBean -->
+  <bean id="cacheManagerFactoryBean" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
+    <property name="configLocation" value="classpath:spring/ehcache.xml" />
+    <!-- 如果有多个ehcacheManager要在bean加上p:shared="true" -->
+	<!-- <property name="shared" value="true" /> -->
+  </bean>
+	
+  <!-- 如果有多个ehcacheManager要在bean加上p:shared="true" --><!-- Shiro提供的Ehcache实现的缓存管理器 -->
+  <!-- 配置 shiro 的 ehcache 缓存相关,这个缓存只和 Realm 相关 -->
+  <bean id="shiroCacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager">
+    <property name="cacheManager" ref="cacheManagerFactoryBean"></property>
   </bean>
 
   <!-- 会话管理器 -->
@@ -103,9 +108,10 @@
     class="org.apache.shiro.web.session.mgt.DefaultWebSessionManager">
     <!-- 设置全局会话超时时间 半小时 -->
     <property name="globalSessionTimeout" value="#{30 * 60 * 1000}" />
-    <!-- url上带sessionId 默认为true -->
-    <property name="sessionIdUrlRewritingEnabled" value="false" /> 
+    <!-- 去掉URL中的JSESSIONID -->
+    <property name="sessionIdUrlRewritingEnabled" value="true"/>
     <property name="sessionDAO" ref="sessionDAO" />
+    <!-- 是否开启扫描 -->
     <property name="sessionValidationSchedulerEnabled" value="true" />
     <property name="sessionIdCookieEnabled" value="true" />
     <property name="sessionIdCookie" ref="simpleCookie" />
@@ -114,17 +120,24 @@
   <!-- 指定本系统SESSIONID, 默认为: JSESSIONID 问题: 与SERVLET容器名冲突, 如JETTY, TOMCAT 
     等默认JSESSIONID, 当跳出SHIRO SERVLET时如ERROR-PAGE容器会为JSESSIONID重新分配值导致登录会话丢失! -->
   <bean id="simpleCookie" class="org.apache.shiro.web.servlet.SimpleCookie">
-    <constructor-arg name="name" value="jeesite.session.id" />
+    <constructor-arg name="name" value="JSESSIONID" />
+    <!-- JSESSIONID的path为/用于多个系统共享JSESSIONID -->
     <property name="path" value="/" />
+    <!-- 浏览器中通过document.cookie可以获取cookie属性，设置了HttpOnly=true,在脚本中就不能的到cookie，可以避免cookie被盗用 -->
+    <property name="httpOnly" value="true"/>
   </bean>
 
   <!-- 会话DAO 用于会话的CRUD -->
-  <bean id="sessionDAO"
-    class="org.apache.shiro.session.mgt.eis.EnterpriseCacheSessionDAO">
+  <bean id="sessionDAO" class="org.apache.shiro.session.mgt.eis.EnterpriseCacheSessionDAO">
     <!-- Session缓存名字，默认就是shiro-activeSessionCache -->
     <property name="activeSessionsCacheName" value="activeSessionCache" />
-    <property name="cacheManager" ref="shiroSpringCacheManager" />
+    <property name="cacheManager" ref="shiroCacheManager" />
+    <!-- 定义该Session DAO操作中所使用的ID生成器 --> 
+    <property name="sessionIdGenerator" ref="sessionIdGenerator"/>
   </bean>
+  
+  <!-- 定义Session ID生成管理器 --> 
+  <bean id="sessionIdGenerator" class="org.apache.shiro.session.mgt.eis.JavaUuidSessionIdGenerator" />
 
   <!-- 在方法中 注入 securityManager ，进行代理控制 -->
   <bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
