@@ -10,11 +10,12 @@
     <result column="password" property="password" />
     <result column="tel" property="tel" />
     <result column="age" property="age" />
+    <result column="mail" property="mail" />
     <collection property="userRoles" column="userid" ofType="UserRole">
       <id property="urid" column="urid" />
-      <association column="roleid" property="role" javaType="Role">
+      <association column="role_id" property="role" javaType="Role">
         <id column="rid" property="rid"></id>
-        <result column="rolename" property="roleName" />
+        <result column="role_name" property="roleName" />
       </association>
     </collection>
   </resultMap>
@@ -22,61 +23,61 @@
   <select id="getUsers" resultMap="userMap">
     SELECT *
     FROM 
-      t_user
+      `T_USER`
     LEFT JOIN 
-      t_user_role ON t_user.uid=t_user_role.userid
+      `T_USER_ROLE` ON T_USER.uid=`T_USER_ROLE`.user_id
     LEFT JOIN 
-      t_role ON t_user_role.roleid=t_role.rid
+      `T_ROLE` ON `T_USER_ROLE`.role_id=`T_ROLE`.rid
   </select>
 
   <select id="getUserById" resultMap="userMap">
     SELECT
       * 
     FROM
-      t_user 
+      `T_USER` 
     LEFT JOIN
-      t_user_role ON t_user.uid=t_user_role.userid 
+      `T_USER_ROLE` ON `T_USER`.uid=`T_USER_ROLE`.user_id 
     LEFT JOIN
-      t_role ON t_user_role.roleid=t_role.rid
+      `T_ROLE` ON `T_USER_ROLE`.role_id=`T_ROLE`.rid
     WHERE 
-      t_user.uid=#{uid}
+      `T_USER`.uid=#{uid}
   </select>
 
   <delete id="deleteUser" parameterType="int">
     DELETE FROM 
-      t_user
+      `T_USER`
     WHERE
-      t_user.uid=#{uid}
+      `T_USER`.uid=#{uid}
   </delete>
 
   <delete id="deleteUserRole" parameterType="int">
     DELETE FROM 
-      t_user_role 
+      `T_USER_ROLE`
     WHERE 
-      t_user_role.userid=#{uid}
+      `T_USER_ROLE`.user_id=#{uid}
   </delete>
 
   <insert id="addUser" useGeneratedKeys="true" keyProperty="uid" parameterType="User">
     INSERT INTO 
-      t_user (username,password,tel,age)
+      `T_USER` (username,password,tel,age)
     VALUES
      (#{username},'1234',#{tel},#{age})
   </insert>
 
   <update id="updateUser" parameterType="User">
     UPDATE
-      t_user
+      `T_USER`
     SET
       tel=#{tel},age=#{age}
     WHERE 
-      t_user.uid=#{uid}
+      `T_USER`.uid=#{uid}
   </update>
 
   <select id="getUidByUserName" resultType="int" parameterType="String">
     SELECT 
       uid
     FROM
-      t_user 
+      `T_USER`
     WHERE
       username=#{username}
   </select>
@@ -85,12 +86,12 @@
     SELECT
       * 
     FROM
-      t_user 
+      `T_USER`
     LEFT JOIN
-      t_user_role ON t_user.uid=t_user_role.userid 
+      `T_USER_ROLE` ON `T_USER`.uid=`T_USER_ROLE`.user_id 
     LEFT JOIN
-      t_role ON t_user_role.roleid=t_role.rid
+      `T_ROLE` ON `T_USER_ROLE`.role_id=`T_ROLE`.rid
     WHERE 
-      t_user.username=#{username}
+      `T_USER`.username=#{username}
   </select>
 </mapper>

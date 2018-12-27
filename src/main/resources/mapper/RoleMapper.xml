@@ -6,92 +6,97 @@
 
   <resultMap type="Role" id="roleMap">
     <id column="rid" property="rid"></id>
-    <result column="rolename" property="roleName" />
-    <collection property="rolePermissions" column="roleid" ofType="RolePermission">
+    <result column="role_name" property="roleName" />
+    <result column="role_desc" property="roleDesc" />
+    <collection property="rolePermissions" column="role_id" ofType="RolePermission">
       <id property="rpid" column="rpid" />
-      <association column="permissionid" property="permission" javaType="Permission">
+      <association column="permission_id" property="permission" javaType="Permission">
         <id column="pid" property="pid"></id>
-        <result column="permissionname" property="permissionName" />
+        <result column="permission_name" property="permissionName" />
       </association>
     </collection>
   </resultMap>
 
   <select id="getRoles" resultType="Role">
-    SELECT * 
-    FROM t_role
+    SELECT
+      * 
+    FROM
+      `T_ROLE`
   </select>
 
   <select id="getRoleInfo" resultMap="roleMap">
     SELECT * 
     FROM 
-      t_role 
+      `T_ROLE` 
     LEFT JOIN 
-      t_role_permission ON t_role.rid=t_role_permission.roleid 
+      `T_ROLE_PERMISSION` ON `T_ROLE`.rid=`T_ROLE_PERMISSION`.role_id 
     LEFT JOIN 
-      t_permission ON t_role_permission.permissionid=t_permission.pid
+      `T_PERMISSION` ON `T_ROLE_PERMISSION`.permission_id=`T_PERMISSION`.pid
   </select>
   
   <insert id="addUserRole" useGeneratedKeys="true" keyProperty="urid" parameterType="UserRole">
     INSERT INTO 
-      t_user_role (userid,roleid)
+      `T_USER_ROLE` (user_id,role_id)
     VALUES 
       (#{user.uid},#{role.rid})
   </insert>
   
   <select id="getRoleByName" resultMap="roleMap" parameterType="String">
-    SELECT * 
+    SELECT 
+      *
     FROM 
-      t_role 
+      `T_ROLE` 
     LEFT JOIN 
-      t_role_permission ON t_role.rid=t_role_permission.roleid 
+      `T_ROLE_PERMISSION` ON `T_ROLE`.rid=`T_ROLE_PERMISSION`.role_id 
     LEFT JOIN 
-      t_permission ON t_role_permission.permissionid=t_permission.pid 
+      `T_PERMISSION` ON `T_ROLE_PERMISSION`.permission_id=`T_PERMISSION`.pid 
     WHERE 
-      t_role.rolename=#{roleName}
+      `T_ROLE`.role_name=#{roleName}
   </select>
   
   <insert id="addRole" useGeneratedKeys="true" keyProperty="rid" parameterType="Role">
     INSERT INTO 
-      t_role (rolename)
+      `T_ROLE` (role_name, role_desc)
     VALUES
-      (#{roleName})
+      (#{roleName}, #{roleDesc})
   </insert>
   <insert id="addRolePermission" useGeneratedKeys="true" keyProperty="rpid" parameterType="RolePermission">
     INSERT INTO 
-      t_role_permission(roleid,permissionid)
+      `T_ROLE_PERMISSION`(role_id,permission_id)
     VALUES
       (#{role.rid},#{permission.pid})
   </insert>
   
   <delete id="deleteRole" parameterType="Role">
     DELETE FROM 
-      t_role 
+      `T_ROLE` 
     WHERE 
       rid=#{rid}
   </delete>
   
   <delete id="deleteRolePermission" parameterType="int">
     DELETE FROM
-      t_role_permission
+      `T_ROLE_PERMISSION`
     WHERE
       roleid=#{roleid}
   </delete>
   
   <delete id="deleteUserRole" parameterType="int">
     DELETE FROM 
-      t_user_role 
-    WHERE roleid=#{roleid} 
+      `T_USER_ROLE` 
+    WHERE
+      roleid=#{roleid} 
   </delete>
   
   <select id="getRoleById" parameterType="int" resultMap="roleMap">
     SELECT * 
     FROM 
-      t_role 
+      `T_ROLE` 
     LEFT JOIN 
-      t_role_permission ON t_role.rid=t_role_permission.roleid 
+      `T_ROLE_PERMISSION` ON `T_ROLE`.rid=`T_ROLE_PERMISSION`.role_id 
     LEFT JOIN 
-      t_permission ON t_role_permission.permissionid=t_permission.pid 
+      `T_PERMISSION` ON `T_ROLE_PERMISSION`.permission_id=`T_PERMISSION`.pid 
     WHERE 
-      t_role.rid=#{rid}
+      `T_ROLE`.rid=#{rid}
   </select>
 </mapper>

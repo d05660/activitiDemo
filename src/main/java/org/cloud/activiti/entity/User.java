@@ -7,6 +7,7 @@ public class User {
 	private String username;
 	private String password;
 	private String tel;
+	private String mail;
 	private int age;
 	private List<UserRole> userRoles;
 	
@@ -54,8 +55,16 @@ public class User {
 	public void setPassword(String password) {
 		this.password = password;
 	}
+	
+	public String getMail() {
+        return mail;
+    }
 
-	public String getTel() {
+    public void setMail(String mail) {
+        this.mail = mail;
+    }
+
+    public String getTel() {
 		return tel;
 	}
 

@@ -3,31 +3,40 @@
    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="org.cloud.activiti.mapper.PermissionMapper">
-
   <select id="getPermissions" resultType="Permission">
-    SELECT *
-    FROM t_permission
+    SELECT
+      *
+    FROM
+      `T_PERMISSION`
   </select>
 
   <select id="getPermissionByName" resultType="Permission">
-    SELECT *
+    SELECT
+      *
     FROM
-      t_permission
+      `T_PERMISSION`
     WHERE
-      permissionname=#{permissionName}
+      permission_name=#{permissionName}
   </select>
+
   <insert id="addPermission">
     INSERT INTO
-      t_permission (permissionname)
+      `T_PERMISSION` (permission_name)
     VALUES
       (#{permissisonName})
   </insert>
+
   <delete id="deletePermission">
-    DELETE FROM t_permission
-    WHERE pid=#{pid}
+    DELETE FROM 
+      `T_PERMISSION`
+    WHERE 
+      pid=#{pid}
   </delete>
+
   <delete id="deleteRolePermission">
-    DELETE FROM t_role_permission
-    WHERE permissionid=#{permissionId}
+    DELETE FROM 
+      `T_PERMISSION`
+    WHERE 
+      permission_id=#{permissionId}
   </delete>
 </mapper>

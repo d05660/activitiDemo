@@ -5,6 +5,7 @@ import java.util.List;
 public class Role {
 	private int rid;
 	private String roleName;
+	private String roleDesc;
 	private List<UserRole> userRoles;
 	private List<RolePermission> rolePermissions;
 	
@@ -26,7 +27,16 @@ public class Role {
 		this.rid = rid;
 	}
 
-	public String getRoleName() {
+	
+	public String getRoleDesc() {
+        return roleDesc;
+    }
+
+    public void setRoleDesc(String roleDesc) {
+        this.roleDesc = roleDesc;
+    }
+
+    public String getRoleName() {
 		return roleName;
 	}
 
