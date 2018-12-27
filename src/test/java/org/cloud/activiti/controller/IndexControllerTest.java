@@ -12,6 +12,8 @@ import org.apache.shiro.web.subject.WebSubject;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -30,12 +32,12 @@ import org.springframework.web.context.WebApplicationContext;
 @ContextConfiguration(locations = { "classpath:spring/applicationContext.xml",
         "classpath:spring/spring-mvc.xml" })
 public class IndexControllerTest {
+    
+    private final Logger LOGGER = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private IndexController indexController;
 
-//    @Autowired
-//    private LoginController loginController;
     @Resource
     private SessionDAO sessionDAO;
 
@@ -44,10 +46,6 @@ public class IndexControllerTest {
 
     @Resource
     private org.apache.shiro.mgt.SecurityManager securityManager;
-
-    // private MockMvc mockMvc1;
-//    private MockMvc mockMvc2;
-//    private MockHttpSession session;
 
     private Subject subject;
     private MockMvc mockMvc;
@@ -75,43 +73,42 @@ public class IndexControllerTest {
         login("admin", "123456");
     }
 
-    /**
-     * 获取用户登录的Session
-     * 
-     * @return MockHttpSession
-     * @throws Exception 异常
-     */
-//    private MockHttpSession doLogin() throws Exception {
-//        ResultActions resultActions = this.mockMvc2.perform(MockMvcRequestBuilders.post("/login")
-//                .param("username", "admin").param("password", "123456"));
-//        resultActions.andExpect(MockMvcResultMatchers.status().isOk());
-//        MvcResult result = resultActions.andReturn();
-//        session = (MockHttpSession) result.getRequest().getSession();
-//        return session;
-//    }
-
     @Test
     public void test() throws Exception {
-        System.out.println("-------------shiro基本权限测试-------------");
-        System.out.println("get page result:" + mockMvc
+        LOGGER.error("-------------shiro基本权限测试-------------");
+        LOGGER.error("get page result:" + mockMvc
                 .perform(MockMvcRequestBuilders.get("/manager/details"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn()
                 .getResponse()
                 .getContentAsString());
-        System.err.println("all session id:" +
+        LOGGER.error("all session id:" +
                 sessionDAO.getActiveSessions().stream()
                         .map(Session::getId)
                         .reduce((x, y) -> x + "," + y)
                         .orElse(""));
+        LOGGER.error("-------------测试同一用户异地登录将另一session踢出,该过程在CredentialsMatcher进行处理-------------");
         login("admin", "123456");
-        System.out.println("get page result:" + mockMvc
+        LOGGER.error("get page result:" + mockMvc
                 .perform(MockMvcRequestBuilders.get("/manager/details"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn()
                 .getResponse()
                 .getContentAsString());
-        System.err.println("all session id:" +
+        LOGGER.error("all session id:" +
+                sessionDAO.getActiveSessions().stream()
+                        .map(Session::getId)
+                        .reduce((x, y) -> x + "," + y)
+                        .orElse(""));
+        LOGGER.error("-------------测试登出后权限-------------");
+        subject.logout();
+        LOGGER.error("logout page result:" + mockMvc
+                .perform(MockMvcRequestBuilders.get("/manager/details"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn()
+                .getResponse()
+                .getContentAsString());
+        LOGGER.error("all session id:" +
                 sessionDAO.getActiveSessions().stream()
                         .map(Session::getId)
                         .reduce((x, y) -> x + "," + y)

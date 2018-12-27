@@ -1,5 +1,8 @@
 package org.cloud.activiti.security;
 
+import java.util.Collection;
+
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
@@ -10,8 +13,12 @@ import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.cache.CacheManager;
 import org.apache.shiro.realm.AuthorizingRealm;
+import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.SimplePrincipalCollection;
+import org.apache.shiro.subject.support.DefaultSubjectContext;
+import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
+import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
 import org.cloud.activiti.entity.User;
 import org.cloud.activiti.service.UserService;
 import org.slf4j.Logger;
@@ -35,10 +42,10 @@ public class ShiroDbRealm extends AuthorizingRealm {
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authcToken)
             throws AuthenticationException {
-        LOGGER.info("Shiro开始登录认证");
+        LOGGER.info("Shiro start to Authentication...");
         UsernamePasswordToken token = (UsernamePasswordToken) authcToken;
         // 根据用户名查询数据库
-        String username = token.getUsername();
+        String userName = token.getUsername();
         User user = userService.getUserByName(token.getUsername());
 
         // 账号不存在
@@ -48,7 +55,7 @@ public class ShiroDbRealm extends AuthorizingRealm {
         }
 
         // 认证缓存信息
-        return new SimpleAuthenticationInfo(username, user.getPassword().toCharArray(),
+        return new SimpleAuthenticationInfo(userName, user.getPassword().toCharArray(),
                 ShiroByteSource.of(user.getUsername()), getName());
     }
 

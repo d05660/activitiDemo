@@ -57,7 +57,7 @@
 
   <!-- rememberMe管理器,cipherKey生成见{@code Base64Test.java} -->
   <bean id="rememberMeManager" class="org.apache.shiro.web.mgt.CookieRememberMeManager">
-    <property name="cipherKey"
+    <property name="cipherKey" 
       value="#{T(org.apache.shiro.codec.Base64).decode('5aaC5qKm5oqA5pyvAAAAAA==')}" />
     <property name="cookie" ref="rememberMeCookie" />
   </bean>
@@ -104,12 +104,11 @@
   </bean>
 
   <!-- 会话管理器 -->
-  <bean id="sessionManager"
-    class="org.apache.shiro.web.session.mgt.DefaultWebSessionManager">
+  <bean id="sessionManager" class="org.apache.shiro.web.session.mgt.DefaultWebSessionManager">
     <!-- 设置全局会话超时时间 半小时 -->
     <property name="globalSessionTimeout" value="#{30 * 60 * 1000}" />
     <!-- 去掉URL中的JSESSIONID -->
-    <property name="sessionIdUrlRewritingEnabled" value="true"/>
+    <property name="sessionIdUrlRewritingEnabled" value="false"/>
     <property name="sessionDAO" ref="sessionDAO" />
     <!-- 是否开启扫描 -->
     <property name="sessionValidationSchedulerEnabled" value="true" />
@@ -120,10 +119,11 @@
   <!-- 指定本系统SESSIONID, 默认为: JSESSIONID 问题: 与SERVLET容器名冲突, 如JETTY, TOMCAT 
     等默认JSESSIONID, 当跳出SHIRO SERVLET时如ERROR-PAGE容器会为JSESSIONID重新分配值导致登录会话丢失! -->
   <bean id="simpleCookie" class="org.apache.shiro.web.servlet.SimpleCookie">
-    <constructor-arg name="name" value="JSESSIONID" />
+    <constructor-arg name="name" value="SHIRO-SESSIONID" />
     <!-- JSESSIONID的path为/用于多个系统共享JSESSIONID -->
     <property name="path" value="/" />
-    <!-- 浏览器中通过document.cookie可以获取cookie属性，设置了HttpOnly=true,在脚本中就不能的到cookie，可以避免cookie被盗用 -->
+    <!-- 浏览器中通过document.cookie可以获取cookie属性，设置了HttpOnly=true,在脚本中就不能的到cookie，
+                    可以避免cookie被盗用 -->
     <property name="httpOnly" value="true"/>
   </bean>
 
