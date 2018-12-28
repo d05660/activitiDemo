@@ -30,6 +30,11 @@ public class IndexController {
         return "emps";
     }
     
+    @GetMapping("/partmentList")
+    public String getPartmentPage(Model model) {
+        return "department";
+    }
+    
     @RequiresPermissions(value = { "L1" })
     @GetMapping(value = "/manager/details")
     @ResponseBody
