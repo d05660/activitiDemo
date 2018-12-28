@@ -1,4 +1,4 @@
-package org.cloud.activiti.util;
+package org.cloud.activiti.common;
 
 import org.apache.shiro.SecurityUtils;
 import org.cloud.activiti.entity.QueryResult;

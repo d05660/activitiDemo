@@ -8,7 +8,7 @@ import org.cloud.activiti.entity.Permission;
 import org.cloud.activiti.entity.Role;
 
 
-public interface RoleService {
+public interface IRoleService {
     List<Role> getRoles();
 
     List<Role> getPagedRoleInfo(int pageNum, int pageSize);

@@ -10,14 +10,14 @@ import org.cloud.activiti.entity.User;
 import org.cloud.activiti.entity.UserRole;
 import org.cloud.activiti.mapper.RoleMapper;
 import org.cloud.activiti.mapper.UserMapper;
-import org.cloud.activiti.service.UserService;
+import org.cloud.activiti.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.github.pagehelper.PageHelper;
 
 @Service
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl implements IUserService {
 
     @Autowired
     private UserMapper userMapper;

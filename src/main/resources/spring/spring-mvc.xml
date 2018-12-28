@@ -24,10 +24,12 @@
     <property name="contentType" value="text/html;charset=UTF-8" />
   </bean>
 
+  <!-- 未认证或未授权时跳转必须在springmvc里面配，spring-shiro里的shirofilter配不生效 -->
   <bean
     class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
     <property name="exceptionMappings">
       <props>
+        <!--表示捕获的异常 -->
         <prop key="org.apache.shiro.authz.UnauthorizedException">redirect:login</prop>
         <prop key="org.apache.shiro.authz.UnauthenticatedException">redirect:login</prop>
       </props>

@@ -33,11 +33,13 @@
     <filter-name>shiroFilter</filter-name>
     <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
     <async-supported>true</async-supported>
+    <!-- 设置true由servlet容器控制filter的生命周期 -->
     <init-param>
       <param-name>targetFilterLifecycle</param-name>
       <param-value>true</param-value>
     </init-param>
   </filter>
+  <!-- shiro 过滤器 end -->
 
   <filter-mapping>
     <filter-name>shiroFilter</filter-name>

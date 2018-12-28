@@ -15,24 +15,32 @@ import org.apache.shiro.cache.CacheManager;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.cloud.activiti.entity.User;
-import org.cloud.activiti.service.UserService;
+import org.cloud.activiti.service.IUserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+/**
+ * 自定义Realm 继承AuthorizingRealm
+ * 重写  AuthorizationInfo（授权） 和  AuthenticationInfo（认证）
+ * 
+ * @author sinocom
+ */
 public class ShiroDbRealm extends AuthorizingRealm {
     private static final Logger LOGGER = LoggerFactory.getLogger(ShiroDbRealm.class);
 
     @Autowired
-    private UserService userService;
+    private IUserService userService;
 
     public ShiroDbRealm(CacheManager cacheManager, CredentialsMatcher matcher) {
         super(cacheManager, matcher);
     }
 
     /**
-     * Shiro登录认证(原理：用户提交 用户名和密码 --- shiro 封装令牌 ---- realm 通过用户名将密码查询返回 ---- shiro
-     * 自动去比较查询出密码和用户输入密码是否一致---- 进行登陆控制 )
+     * 认证
+     * @param authenticationToken
+     * @return
+     * @throws AuthenticationException
      */
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authcToken)
@@ -55,7 +63,10 @@ public class ShiroDbRealm extends AuthorizingRealm {
     }
 
     /**
-     * Shiro权限认证
+     * Shiro权限认证 授权
+     * 
+     * @param principalCollection
+     * @return
      */
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {

@@ -17,14 +17,14 @@ import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
 import org.cloud.activiti.entity.VacationRequest;
 import org.cloud.activiti.mapper.VacationMapper;
-import org.cloud.activiti.service.VacationService;
+import org.cloud.activiti.service.IVacationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class VacationServiceImpl implements VacationService {
+public class VacationServiceImpl implements IVacationService {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 

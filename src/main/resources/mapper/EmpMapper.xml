@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="org.cloud.activiti.mapper.EmpMapper">
+
+  <resultMap type="Emp" id="empMap">
+    <id column="id" property="id"></id>
+    <result column="userid" property="userid" />
+    <result column="username" property="username" />
+    <result column="password" property="password" />
+    <result column="partment" property="partment" />
+    <result column="tel" property="tel" />
+    <result column="email" property="email" />
+    <result column="tag" property="tag" />
+  </resultMap>
+
+  <select id="selectAll" resultMap="empMap">
+    SELECT *
+    FROM `T_EMP`
+  </select>
+  
+  <select id="selectCount" resultType="long">
+    SELECT count(*)
+    FROM `T_EMP`
+  </select>
+
+  <select id="selectByPrimaryKey" resultMap="empMap">
+    SELECT *
+    FROM `T_EMP`
+    <where>
+      `T_EMP`.id=#{id}
+    </where>
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="long">
+    DELETE FROM
+    `T_EMP`
+    <where>
+      `T_EMP`.id=#{id}
+    </where>
+  </delete>
+
+  <insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="Emp">
+    INSERT INTO `T_EMP` (userid,username,password,partment,tel,email)
+    VALUES (#{userid},#{username},#{password},#{partment},#{tel},#{email})
+  </insert>
+
+  <update id="update" parameterType="Emp">
+    UPDATE 
+    	`T_EMP` 
+    <set>
+      <if test="userid != null">
+        userid = #{userid},
+      </if>
+      <if test="username != null">
+        username = #{username},
+      </if>
+      <if test="password != null">
+        password = #{password},
+      </if>
+      <if test="partment != null">
+        partment = #{partment},
+      </if>
+      <if test="tel != null">
+        tel = #{tel},
+      </if>
+      <if test="email != null">
+        email = #{email},
+      </if>
+    </set>
+    <where>
+      `T_EMP`.id=#{id}
+    </where>
+  </update>
+  
+  <select id="selectAllOrderBy" resultMap="empMap">
+    SELECT
+    *
+    FROM `T_EMP` A
+    ORDER BY
+    <if test="column != null and column != ''">
+      <choose>
+        <when test="column =='username' ">
+          A.username
+        </when >
+        <when test="column =='userid' ">
+          A.userid
+        </when >
+        <when test="column =='partment' ">
+          A.partment
+        </when >
+        <otherwise>
+          ${column}
+        </otherwise>
+      </choose>
+      <if test="orderDir != null and orderDir != ''">
+        ${orderDir}
+      </if>
+    </if>
+  </select>
+</mapper>

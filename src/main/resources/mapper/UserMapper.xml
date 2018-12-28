@@ -53,8 +53,9 @@
   <delete id="deleteUserRole" parameterType="int">
     DELETE FROM 
       `T_USER_ROLE`
-    WHERE 
+    <where>
       `T_USER_ROLE`.user_id=#{uid}
+    </where>
   </delete>
 
   <insert id="addUser" useGeneratedKeys="true" keyProperty="uid" parameterType="User">
@@ -69,8 +70,9 @@
       `T_USER`
     SET
       tel=#{tel},age=#{age}
-    WHERE 
-      `T_USER`.uid=#{uid}
+    <where>
+      `T_USER`.uid=#{uid}    
+    </where>
   </update>
 
   <select id="getUidByUserName" resultType="int" parameterType="String">
@@ -78,8 +80,9 @@
       uid
     FROM
       `T_USER`
-    WHERE
+    <where>
       username=#{username}
+    </where>
   </select>
 
   <select id="getUserByName" resultMap="userMap">

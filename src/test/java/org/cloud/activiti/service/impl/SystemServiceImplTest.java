@@ -4,8 +4,8 @@ import static org.junit.Assert.*;
 
 import org.cloud.activiti.entity.Role;
 import org.cloud.activiti.entity.User;
-import org.cloud.activiti.service.RoleService;
-import org.cloud.activiti.service.UserService;
+import org.cloud.activiti.service.IRoleService;
+import org.cloud.activiti.service.IUserService;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,10 +20,10 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 public class SystemServiceImplTest {
 
     @Autowired
-    private UserService userService;
+    private IUserService userService;
     
     @Autowired
-    private RoleService roleService;
+    private IRoleService roleService;
 
     @Test
     public void testAddPermission() {

@@ -14,7 +14,7 @@ import org.cloud.activiti.entity.UserRole;
 import org.cloud.activiti.mapper.PermissionMapper;
 import org.cloud.activiti.mapper.RoleMapper;
 import org.cloud.activiti.mapper.UserMapper;
-import org.cloud.activiti.service.RoleService;
+import org.cloud.activiti.service.IRoleService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +23,7 @@ import org.springframework.stereotype.Service;
 import com.github.pagehelper.PageHelper;
 
 @Service
-public class RoleServiceImpl implements RoleService {
+public class RoleServiceImpl implements IRoleService {
     
     private final Logger logger = LoggerFactory.getLogger(getClass());
     

@@ -14,11 +14,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.ContextHierarchy;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
@@ -28,9 +28,11 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@WebAppConfiguration
-@ContextConfiguration(locations = { "classpath:spring/applicationContext.xml",
-        "classpath:spring/spring-mvc.xml" })
+@WebAppConfiguration(value = "src/main/webapp")
+@ContextHierarchy({  
+    @ContextConfiguration(name = "parent", locations = "classpath:spring/applicationContext.xml"),  
+    @ContextConfiguration(name = "child", locations = "classpath:spring/spring-mvc.xml")  
+}) 
 public class IndexControllerTest {
     
     private final Logger LOGGER = LoggerFactory.getLogger(getClass());
@@ -60,7 +62,7 @@ public class IndexControllerTest {
     }
 
     @Before
-    public void setUp() throws Exception {
+    public void before() throws Exception {
         mockHttpServletRequest = new MockHttpServletRequest(webApplicationContext.getServletContext());
         mockHttpServletResponse = new MockHttpServletResponse();
         MockHttpSession mockHttpSession = new MockHttpSession(webApplicationContext.getServletContext());

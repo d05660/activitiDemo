@@ -9,7 +9,7 @@ import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
-import org.cloud.activiti.util.BaseController;
+import org.cloud.activiti.common.BaseController;
 import org.cloud.activiti.util.CsrfToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

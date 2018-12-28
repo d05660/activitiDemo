@@ -1,4 +1,4 @@
-package org.cloud.activiti.util;
+package org.cloud.activiti.common;
 
 import java.util.Random;
 

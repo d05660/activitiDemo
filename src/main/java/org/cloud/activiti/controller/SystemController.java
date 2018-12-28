@@ -7,8 +7,8 @@ import org.cloud.activiti.entity.Permission;
 import org.cloud.activiti.entity.Role;
 import org.cloud.activiti.entity.User;
 import org.cloud.activiti.entity.UserRole;
-import org.cloud.activiti.service.RoleService;
-import org.cloud.activiti.service.UserService;
+import org.cloud.activiti.service.IRoleService;
+import org.cloud.activiti.service.IUserService;
 import org.cloud.activiti.vo.DataGrid;
 import org.cloud.activiti.vo.UserInfo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,9 +23,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 public class SystemController {
     @Autowired
-    UserService userService;
+    IUserService userService;
     @Autowired
-    private RoleService roleService;
+    private IRoleService roleService;
 
     @RequestMapping("/useradmin")
     String useradmin() {

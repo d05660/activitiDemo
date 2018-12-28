@@ -31,10 +31,10 @@ import org.activiti.image.impl.DefaultProcessDiagramGenerator;
 import org.apache.commons.io.IOUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.cloud.activiti.common.BaseController;
 import org.cloud.activiti.entity.VacationRequest;
-import org.cloud.activiti.service.UserService;
-import org.cloud.activiti.service.VacationService;
-import org.cloud.activiti.util.BaseController;
+import org.cloud.activiti.service.IUserService;
+import org.cloud.activiti.service.IVacationService;
 import org.cloud.activiti.util.CollectionUtil;
 import org.cloud.activiti.vo.DataGrid;
 import org.cloud.activiti.vo.HistoryProcess;
@@ -65,13 +65,13 @@ public class ActivitiController extends BaseController {
     @Autowired
     private IdentityService identityService;
     @Autowired
-    private VacationService vacationService;
+    private IVacationService vacationService;
     @Autowired
     private TaskService taskService;
     @Autowired
     private HistoryService historyService;
     @Autowired
-    private UserService userService;
+    private IUserService userService;
 
     @RequestMapping("/processList")
     String processList() {

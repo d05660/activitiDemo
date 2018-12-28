@@ -9,7 +9,7 @@ import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
 import org.cloud.activiti.entity.VacationRequest;
 
-public interface VacationService {
+public interface IVacationService {
     public void completeReportBack(String taskId, String realStartTime, String realEndTime);
 
     public List<VacationRequest> getDeptTaskByPage(int firstRow, int rowCount);

@@ -14,8 +14,9 @@
   <select id="getPwdByName" parameterType="String" resultMap="userMap">
     SELECT * 
     FROM user 
-    WHERE 
-    username=#{name}
+    <where>
+      username=#{name}
+    </where>
   </select>
 
 

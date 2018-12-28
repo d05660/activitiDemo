@@ -5,7 +5,7 @@ import java.util.Set;
 
 import org.cloud.activiti.entity.User;
 
-public interface UserService {
+public interface IUserService {
     
     List<User> getAllUsers();
 

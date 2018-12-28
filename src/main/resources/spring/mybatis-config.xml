@@ -15,6 +15,7 @@
     <typeAlias type="org.cloud.activiti.entity.RolePermission" alias="RolePermission" />
     <typeAlias type="org.cloud.activiti.entity.Permission" alias="Permission" />
     <typeAlias type="org.cloud.activiti.entity.VacationRequest" alias="VacationRequest" />
+    <typeAlias type="org.cloud.activiti.entity.Emp" alias="Emp" />
   </typeAliases>
 
   <plugins>

@@ -65,6 +65,7 @@
     <property name="successUrl" value="/index" />
     <!-- 没有权限跳转的url -->
     <property name="unauthorizedUrl" value="/unauth" />
+    <!--URL的拦截-->
     <property name="filterChainDefinitions">
       <value>
         <!-- anon 不需要认证 authc 需要认证 user 验证通过或RememberMe登录的都可以 -->
@@ -96,15 +97,16 @@
     <property name="kickoutUrl" value="/login?kickout=1"/>
   </bean>
 
-  <!-- Spring提供的Ehcache实现的缓存管理器 -->
-  <!-- 配置 Spring 的 EhCacheManagerFactoryBean -->
+  <!-- Spring提供的Ehcache实现的缓存管理器 
+               配置 Spring 的 EhCacheManagerFactoryBean -->
   <bean id="cacheManagerFactoryBean" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
     <property name="configLocation" value="classpath:spring/ehcache.xml" />
     <!-- 如果有多个ehcacheManager要在bean加上p:shared="true" -->
 	<!-- <property name="shared" value="true" /> -->
   </bean>
 	
-  <!-- 如果有多个ehcacheManager要在bean加上p:shared="true" --><!-- Shiro提供的Ehcache实现的缓存管理器 -->
+  <!-- 如果有多个ehcacheManager要在bean加上p:shared="true" -->
+  <!-- Shiro提供的Ehcache实现的缓存管理器 -->
   <!-- 配置 shiro 的 ehcache 缓存相关,这个缓存只和 Realm 相关 -->
   <bean id="shiroCacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager">
     <property name="cacheManager" ref="cacheManagerFactoryBean"></property>
@@ -161,8 +163,7 @@
   <!-- Shiro生命周期处理器 保证实现了Shiro内部lifecycle函数的bean执行 -->  
   <bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor"/>
 
-  <!-- AOP式方法级权限检查 -->
-
+  <!--开启shiro的注解-->
   <bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator"
     depends-on="lifecycleBeanPostProcessor" >
     <property name="proxyTargetClass" value="true" />
