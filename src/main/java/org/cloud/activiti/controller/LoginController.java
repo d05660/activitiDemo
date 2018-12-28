@@ -11,8 +11,6 @@ import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
 import org.cloud.activiti.common.BaseController;
 import org.cloud.activiti.util.CsrfToken;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,8 +19,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller("loginController")
 public class LoginController extends BaseController {
-
-    private final Logger LOGGER = LoggerFactory.getLogger(getClass());
 
     public static final String USER_SESSION = "USER_SESSION";
 
@@ -34,7 +30,7 @@ public class LoginController extends BaseController {
     @GetMapping("/login")
     @CsrfToken(create = true)
     public String login() {
-        LOGGER.info("GET login request!");
+        logger.debug("GET login request!");
         if (SecurityUtils.getSubject().isAuthenticated()) {
             return "redirect:/index";
         }
@@ -54,24 +50,24 @@ public class LoginController extends BaseController {
     public Object loginPost(HttpServletRequest request, HttpServletResponse response,
             String username, String password,
             @RequestParam(value = "rememberMe", defaultValue = "0") Integer rememberMe) {
-        LOGGER.info("GET login request!");
-        // 改?全部抛出?常，避免ajax csrf token被刷新
-        Subject user = SecurityUtils.getSubject();
+        
+        Subject currentUser = SecurityUtils.getSubject();
         UsernamePasswordToken token = new UsernamePasswordToken(username, password);
         // ?置?住密?
 
         token.setRememberMe(1 == rememberMe);
         try {
-            user.login(token);
+            currentUser.login(token);
+            logger.info("User [" + currentUser.getPrincipal() + "] logged in successfully." );
             return renderSuccess();
         } catch (UnknownAccountException e) {
-            LOGGER.error("User Account Not exist！");
+            logger.error("User Account Not exist！");
         } catch (DisabledAccountException e) {
-            LOGGER.error("User Account is disabled！");
+            logger.error("User Account is disabled！");
         } catch (IncorrectCredentialsException e) {
-            LOGGER.error("User Credentials incorrect");
+            logger.error("User Credentials incorrect");
         } catch (Throwable e) {
-            LOGGER.error(e.getMessage());
+            logger.error(e.getMessage());
         }
         return renderError("User Or Password incorrect!");
     }
@@ -97,7 +93,7 @@ public class LoginController extends BaseController {
     @PostMapping("/logout")
     @ResponseBody
     public Object logout() {
-        LOGGER.info("User logout");
+        logger.info("User logout");
         Subject subject = SecurityUtils.getSubject();
         subject.logout();
         return renderSuccess();

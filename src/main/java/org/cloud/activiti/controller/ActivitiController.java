@@ -161,7 +161,7 @@ public class ActivitiController extends BaseController {
         Map<String, Object> variables = new HashMap<String, Object>();
         variables.put("applyuserid", userName);
         ProcessInstance ins = vacationService.startWorkflow(request, userName, variables);
-        LOGGER.debug("流程id" + ins.getId() + "已??");
+        logger.debug("流程id" + ins.getId() + "已??");
         return SUCCESS;
     }
 
