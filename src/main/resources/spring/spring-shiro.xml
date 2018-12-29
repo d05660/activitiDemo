@@ -1,28 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-  xmlns:util="http://www.springframework.org/schema/util" xmlns:aop="http://www.springframework.org/schema/aop"
+  xmlns:util="http://www.springframework.org/schema/util" 
+  xmlns:aop="http://www.springframework.org/schema/aop"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="
-       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
-       http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.3.xsd
-       http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd">
+       http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/util 
+       http://www.springframework.org/schema/util/spring-util.xsd
+       http://www.springframework.org/schema/aop 
+       http://www.springframework.org/schema/aop/spring-aop.xsd">
 
-  <description>Shiro安全配置</description>
+  <description>Shiro Configuration</description>
 
   <!--安全管理器 -->
   <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
     <!--设置自定义Realm -->
     <property name="realm" ref="shiroDbRealm" />
     <!--将缓存管理器，交给安全管理器 -->
-    <property name="cacheManager" ref="shiroCacheManager" />
+    <property name="cacheManager" ref="redisCacheManager" />
     <!-- 记住密码管理 -->
     <property name="rememberMeManager" ref="rememberMeManager" />
     <property name="sessionManager" ref="sessionManager" />
   </bean>
+  
+  <!--shiro-redis redisCacheManager-->
+  <bean id="redisCacheManager" class="org.crazycake.shiro.RedisCacheManager">
+    <property name="redisManager" ref="redisManager"/>
+  </bean>
 
   <!-- 項目自定义的Realm -->
   <bean id="shiroDbRealm" class="org.cloud.activiti.security.ShiroDbRealm">
-    <constructor-arg index="0" name="cacheManager" ref="shiroCacheManager" />
+    <constructor-arg index="0" name="cacheManager" ref="redisCacheManager" />
     <constructor-arg index="1" name="matcher" ref="credentialsMatcher" />
   </bean>
 
@@ -90,26 +99,11 @@
        maxSession：同一个用户最大的会话数，默认1
   -->
   <bean id="kickoutSessionControlFilter" class="org.cloud.activiti.security.KickoutSessionControlFilter">
-    <property name="cacheManager" ref="shiroCacheManager"/>
+    <property name="cacheManager" ref="redisCacheManager"/>
     <property name="sessionManager" ref="sessionManager"/>
     <property name="kickoutAfter" value="false"/>
     <property name="maxSession" value="1"/>
     <property name="kickoutUrl" value="/login?kickout=1"/>
-  </bean>
-
-  <!-- Spring提供的Ehcache实现的缓存管理器 
-               配置 Spring 的 EhCacheManagerFactoryBean -->
-  <bean id="cacheManagerFactoryBean" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
-    <property name="configLocation" value="classpath:spring/ehcache.xml" />
-    <!-- 如果有多个ehcacheManager要在bean加上p:shared="true" -->
-	<!-- <property name="shared" value="true" /> -->
-  </bean>
-	
-  <!-- 如果有多个ehcacheManager要在bean加上p:shared="true" -->
-  <!-- Shiro提供的Ehcache实现的缓存管理器 -->
-  <!-- 配置 shiro 的 ehcache 缓存相关,这个缓存只和 Realm 相关 -->
-  <bean id="shiroCacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager">
-    <property name="cacheManager" ref="cacheManagerFactoryBean"></property>
   </bean>
 
   <!-- 会话管理器 -->
@@ -139,8 +133,8 @@
   <!-- 会话DAO 用于会话的CRUD -->
   <bean id="sessionDAO" class="org.apache.shiro.session.mgt.eis.EnterpriseCacheSessionDAO">
     <!-- Session缓存名字，默认就是shiro-activeSessionCache -->
-    <property name="activeSessionsCacheName" value="shiro-activeSessionCache" />
-    <property name="cacheManager" ref="shiroCacheManager" />
+    <property name="activeSessionsCacheName" value="shiro_redis_session" />
+    <property name="cacheManager" ref="redisCacheManager" />
     <!-- 定义该Session DAO操作中所使用的ID生成器 --> 
     <property name="sessionIdGenerator" ref="sessionIdGenerator"/>
   </bean>

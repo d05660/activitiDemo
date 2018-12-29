@@ -1,23 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
-	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:aop="http://www.springframework.org/schema/aop"
 	xsi:schemaLocation="
-       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
-       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
-       http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd
-       http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd">
+       http://www.springframework.org/schema/beans 
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context 
+       http://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/mvc 
+       http://www.springframework.org/schema/mvc/spring-mvc.xsd
+       http://www.springframework.org/schema/aop 
+       http://www.springframework.org/schema/aop/spring-aop.xsd
+       http://www.springframework.org/schema/tx 
+       http://www.springframework.org/schema/tx/spring-tx.xsd">
   
-  <!-- 1.启动注解，注册服务，如验证框架、全局类型转换器 -->
+  <!-- 添加注解驱动 -->  
+  <!-- <context:annotation-config />  --> 
+  <!-- 如果使用注释，则必须配置以下设置 -->
   <mvc:annotation-driven />
 
   <mvc:resources mapping="/assets/**/" location="/assets/"/>  
 
   <!-- 2.启动自动扫描,只加载controller的时候,不加载service,因为此时事物并未生效,若此时加载了service,那么事物无法对service进行拦截 -->
   <context:component-scan base-package="org.cloud.activiti.controller" />
+  
+  <!-- 注解方式配置事务 -->
+  <tx:annotation-driven transaction-manager="transactionManager" />
 
-  <!-- 3.配置视图解析器 -->
-  <!-- 对转向视图的路径解析，在请求时对视图名称添加前后缀 -->
+  <!-- 配置视图解析器
+       当处理器返回“index”时，InternalResourceViewResolver解析器会自动添加前缀和后缀：/WEB-INF/jsp/index.jsp -->
   <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
     <property name="prefix" value="/WEB-INF/views/" />
     <property name="suffix" value=".jsp" />
@@ -35,5 +49,16 @@
       </props>
     </property>
   </bean>
+  
+  <bean id="multipartResolver"  class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+    <!-- 上传文件大小上限，单位为字节（10MB） -->
+    <property name="maxUploadSize">
+      <value>10485760</value>
+    </property>    
+    <!-- 请求的编码格式，必须和jSP的pageEncoding属性一致，以便正确读取表单的内容，默认为ISO-8859-1 -->  
+    <property name="defaultEncoding">
+      <value>UTF-8</value>
+    </property>  
+  </bean> 
   
 </beans>

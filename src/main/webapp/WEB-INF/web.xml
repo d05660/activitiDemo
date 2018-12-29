@@ -4,6 +4,8 @@
     xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" 
     version="3.0">
   <display-name>activitiDemo</display-name>
+  
+  <!-- spring 配置 -->
   <listener>
     <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
   </listener>
@@ -11,6 +13,8 @@
     <param-name>contextConfigLocation</param-name>
     <param-value>classpath:spring/applicationContext.xml</param-value>
   </context-param>
+  
+  <!-- 字符编码过滤器 -->
   <filter>
     <filter-name>encodingFilter</filter-name>
     <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
@@ -28,7 +32,7 @@
     <url-pattern>/*</url-pattern>
   </filter-mapping>
 
-  <!-- shiro 安全过滤器 -->
+  <!-- shiro filter 的配置要在别的配置之前,保证能够拦截到所有的请求 --> 
   <filter>
     <filter-name>shiroFilter</filter-name>
     <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
@@ -39,8 +43,6 @@
       <param-value>true</param-value>
     </init-param>
   </filter>
-  <!-- shiro 过滤器 end -->
-
   <filter-mapping>
     <filter-name>shiroFilter</filter-name>
     <url-pattern>/*</url-pattern>
@@ -56,6 +58,7 @@
     <listener-class>org.springframework.web.util.Log4jConfigListener</listener-class>
   </listener>
   
+  <!-- spring mvc 配置 -->
   <servlet>
     <servlet-name>DispatcherServlet</servlet-name>
     <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
@@ -69,8 +72,10 @@
     <servlet-name>DispatcherServlet</servlet-name>
     <url-pattern>/</url-pattern>
   </servlet-mapping>
+  
+  <!-- session有效时间 -->
   <session-config>
-    <session-timeout>20</session-timeout>
+    <session-timeout>30</session-timeout>
   </session-config>
   
   <welcome-file-list>
