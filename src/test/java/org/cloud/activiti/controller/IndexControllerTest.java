@@ -1,11 +1,13 @@
 package org.cloud.activiti.controller;
 
 import javax.annotation.Resource;
+import javax.servlet.Filter;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.session.mgt.eis.SessionDAO;
+import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.util.ThreadContext;
 import org.apache.shiro.web.subject.WebSubject;
@@ -42,7 +44,7 @@ public class IndexControllerTest {
 
     @Resource
     private SessionDAO sessionDAO;
-
+    
     @Resource
     private WebApplicationContext webApplicationContext;
 
@@ -68,7 +70,9 @@ public class IndexControllerTest {
         MockHttpSession mockHttpSession = new MockHttpSession(webApplicationContext.getServletContext());
         mockHttpServletRequest.setSession(mockHttpSession);
         SecurityUtils.setSecurityManager(securityManager);
-        mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
+        mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
+                //.addFilters((Filter) webApplicationContext.getBean("shiroFilter"))
+                .build();
         login("admin", "123456");
     }
 
@@ -76,7 +80,7 @@ public class IndexControllerTest {
     public void test() throws Exception {
         LOGGER.error("-------------shiro基本权限测试-------------");
         LOGGER.error("get page result:" + mockMvc
-                .perform(MockMvcRequestBuilders.get("/manager/details"))
+                .perform(MockMvcRequestBuilders.get("/manager/details").secure( true ))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn()
                 .getResponse()

@@ -11,7 +11,7 @@
      http://www.springframework.org/schema/aop
      http://www.springframework.org/schema/aop/spring-aop.xsd">
 
-  <context:property-placeholder location="classpath:config.properties,classpath:jdbc.properties"/>
+  <context:property-placeholder location="classpath:redis.properties,classpath:jdbc.properties"/>
 
   <!-- 引用spring子模块 -->
   <import resource="spring-mybatis.xml" />

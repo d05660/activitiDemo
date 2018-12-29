@@ -25,7 +25,7 @@
   </bean>
   
   <!--shiro-redis redisCacheManager-->
-  <bean id="redisCacheManager" class="org.crazycake.shiro.RedisCacheManager">
+  <bean id="redisCacheManager" class="org.cloud.activiti.redis.RedisCacheManager">
     <property name="redisManager" ref="redisManager"/>
   </bean>
 
@@ -99,7 +99,7 @@
        maxSession：同一个用户最大的会话数，默认1
   -->
   <bean id="kickoutSessionControlFilter" class="org.cloud.activiti.security.KickoutSessionControlFilter">
-    <property name="cacheManager" ref="redisCacheManager"/>
+    <property name="redisManager" ref="redisManager"/>
     <property name="sessionManager" ref="sessionManager"/>
     <property name="kickoutAfter" value="false"/>
     <property name="maxSession" value="1"/>
@@ -113,7 +113,7 @@
     <property name="deleteInvalidSessions" value="true"/>  
     <!-- 去掉URL中的JSESSIONID -->
     <property name="sessionIdUrlRewritingEnabled" value="false"/>
-    <property name="sessionDAO" ref="sessionDAO" />
+    <property name="sessionDAO" ref="redisSessionDAO" />
     <property name="sessionValidationSchedulerEnabled" value="true"/>
     <property name="sessionValidationScheduler" ref="sessionValidationScheduler"/>
     <property name="sessionIdCookieEnabled" value="true" />
@@ -131,10 +131,8 @@
   </bean>
 
   <!-- 会话DAO 用于会话的CRUD -->
-  <bean id="sessionDAO" class="org.apache.shiro.session.mgt.eis.EnterpriseCacheSessionDAO">
-    <!-- Session缓存名字，默认就是shiro-activeSessionCache -->
-    <property name="activeSessionsCacheName" value="shiro_redis_session" />
-    <property name="cacheManager" ref="redisCacheManager" />
+  <bean id="redisSessionDAO" class="org.cloud.activiti.redis.RedisSessionDAO">
+    <property name="redisManager" ref="redisManager" />
     <!-- 定义该Session DAO操作中所使用的ID生成器 --> 
     <property name="sessionIdGenerator" ref="sessionIdGenerator"/>
   </bean>
@@ -166,5 +164,4 @@
   <bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
     <property name="securityManager" ref="securityManager" />
   </bean>  
-
 </beans>

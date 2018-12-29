@@ -35,7 +35,6 @@ public class ShiroDbRealm extends AuthorizingRealm {
     public ShiroDbRealm(CacheManager cacheManager, CredentialsMatcher matcher) {
         super(cacheManager, matcher);
     }
-
     /**
      * 认证
      * @param authenticationToken
@@ -49,6 +48,8 @@ public class ShiroDbRealm extends AuthorizingRealm {
         UsernamePasswordToken token = (UsernamePasswordToken) authcToken;
         // 根据用户名查询数据库
         String userName = token.getUsername();
+        
+        //从数据库查询用户信息
         User user = userService.getUserByName(token.getUsername());
 
         // 账号不存在
@@ -57,14 +58,32 @@ public class ShiroDbRealm extends AuthorizingRealm {
             throw new UnknownAccountException();//没找到帐号
         }
         
-        // 认证缓存信息
+        //调用 CredentialsMatcher校验 还需要创建一个类继承CredentialsMatcher  如果在上面校验了,这个就不需要了
         return new SimpleAuthenticationInfo(userName, user.getPassword().toCharArray(),
                 ShiroByteSource.of(user.getUsername()), getName());
     }
 
     /**
-     * Shiro权限认证 授权
-     * 
+     * 授权用户权限
+     * 授权的方法是在碰到<shiro:hasPermission name=''></shiro:hasPermission>标签的时候调用的
+     * 它会去检测shiro框架中的权限(这里的permissions)是否包含有该标签的name值,如果有,里面的内容显示
+     * 如果没有,里面的内容不予显示(这就完成了对于权限的认证.)
+     *
+     * shiro的权限授权是通过继承AuthorizingRealm抽象类，重载doGetAuthorizationInfo();
+     * 当访问到页面的时候，链接配置了相应的权限或者shiro标签才会执行此方法否则不会执行
+     * 所以如果只是简单的身份认证没有权限的控制的话，那么这个方法可以不进行实现，直接返回null即可。
+     *
+     * 在这个方法中主要是使用类：SimpleAuthorizationInfo 进行角色的添加和权限的添加。
+     * authorizationInfo.addRole(role.getRole()); authorizationInfo.addStringPermission(p.getPermission());
+     *
+     * 当然也可以添加set集合：roles是从数据库查询的当前用户的角色，stringPermissions是从数据库查询的当前用户对应的权限
+     * authorizationInfo.setRoles(roles); authorizationInfo.setStringPermissions(stringPermissions);
+     *
+     * 就是说如果在shiro配置文件中添加了filterChainDefinitionMap.put("/add", "perms[权限添加]");
+     * 就说明访问/add这个链接必须要有“权限添加”这个权限才可以访问
+     *
+     * 如果在shiro配置文件中添加了filterChainDefinitionMap.put("/add", "roles[100002]，perms[权限添加]");
+     * 就说明访问/add这个链接必须要有 "权限添加" 这个权限和具有 "100002" 这个角色才可以访问
      * @param principalCollection
      * @return
      */
@@ -110,14 +129,23 @@ public class ShiroDbRealm extends AuthorizingRealm {
         super.clearCache(principals);
     }
  
+    /**
+     * 清除所有授权缓存
+     */
     public void clearAllCachedAuthorizationInfo() {
         getAuthorizationCache().clear();
     }
  
+    /**
+     * 清除所有认证缓存
+     */
     public void clearAllCachedAuthenticationInfo() {
         getAuthenticationCache().clear();
     }
  
+    /**
+     * 清除所有的  认证缓存和授权缓存
+     */
     public void clearAllCache() {
         clearAllCachedAuthenticationInfo();
         clearAllCachedAuthorizationInfo();
